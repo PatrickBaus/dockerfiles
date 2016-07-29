@@ -1,0 +1,39 @@
+# Edit this file to set up the base structure of the LDAP directory
+# "dc=example,dc=net" will be replaced by your domain.
+# For example if the domain specified by $SLAPD_DOMAIN is
+# "this.is-my-domain.net"
+# "dc=example,dc=net" will be replaced by
+# "dc=this,dc=is-my-domain,dc=net"
+# If you want to import backup data, place do not add this to this file,
+# but rather add it as a seperate ldif file to the modules/ folder,
+# because the base.ldif will be subject to automatic replacement (see above)
+
+dn: dc=example,dc=net
+dc: example
+o: Example
+description: My LDAP Server
+objectclass: top
+objectclass: dcObject
+objectclass: organization
+
+dn: ou=groups,dc=example,dc=net
+objectclass: organizationalUnit
+objectclass: top
+ou: groups
+description: Stores all access groups available
+
+dn: ou=people,dc=example,dc=net
+objectclass: organizationalUnit
+objectclass: top
+ou: people
+description: All registered human accounts, including address book entries
+
+dn: ou=machines,dc=example,dc=net
+objectClass: organizationalUnit
+ou: machines
+description: All registered computer accounts
+
+dn: ou=certificates,dc=example,dc=net
+objectClass: organizationalUnit
+ou: certificates
+description: Fingerprints of all registered certificates, these can be used for authentication
