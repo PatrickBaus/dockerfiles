@@ -2,8 +2,6 @@ FROM alpine
 
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-ENV OPENLDAP_VERSION 2.4.44-r1
-
 # Uncomment this to enable a terminal for nano
 # ENV TERM xterm
 
@@ -25,7 +23,9 @@ COPY modules/ /etc/openldap/modules
 
 COPY schema/ /etc/openldap/schema
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /
+
+EXPOSE 389
 
 ENTRYPOINT ["/entrypoint.sh"]
 

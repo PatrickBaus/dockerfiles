@@ -4,12 +4,10 @@
 # slapd is absurdly high. See https://github.com/docker/docker/issues/8231
 ulimit -n 8192
 
-SLAPD_CONFIG_FOLDER='/etc/openldap/slapd.d'
-
 set -e
   # Run this on first start
   # Make sure the config folder does *not* exist or is empty
-  if [ ! -d "$SLAPD_CONFIG_FOLDER" ] || [ -z "$(ls -A ${SLAPD_CONFIG_FOLDER})" ]; then
+  if [[ ! -d "/etc/openldap/slapd.d" ]] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; then
     # First do some sanity checks
     if [[ -z "$SLAPD_PASSWORD" ]]; then
       echo -n >&2 "Error: Container not configured and SLAPD_PASSWORD not set. "
@@ -24,18 +22,18 @@ set -e
     fi
 
     # Check if there is an existing database but without a config
+    # Exclude DB_CONFIG.example from the list of files, because it was installed by the package.
     if [ -n "$(ls -A /var/lib/openldap/openldap-data | egrep -v '^DB_CONFIG.example$')" ]; then
       echo 'Error: Existing database found, but no config was found. Restore the config and import from backup!'
       echo -e "Data directory contains: \n$(ls -A /var/lib/openldap/openldap-data | egrep -v '^DB_CONFIG.example$')"
       exit 1
     fi
 
-
     # Create a config folder
     mkdir -p /etc/openldap/slapd.d
 
     # Add additional schemas
-    if [[ -n "$SLAPD_ADDITIONAL_SCHEMAS" ]]; then
+    if [ -n "$SLAPD_ADDITIONAL_SCHEMAS" ]; then
         IFS=','
         schemas=$SLAPD_ADDITIONAL_SCHEMAS
         for schema in ${schemas}; do
@@ -54,10 +52,10 @@ set -e
     fi
 
     # Create a secure password hash for the root account
+    # We use standard Linux CRYPT hashes
     password_hash=`slappasswd -h {CRYPT} -c '$6$%.16s' -s "${SLAPD_PASSWORD}"`
     # Escape the hash for use with sed
     password_hash=${password_hash//\//\\\/}
-    password_hash=${SLAPD_PASSWORD}
     # Insert the password into the config file
     sed -i "s|rootpw.*|rootpw		${password_hash}|g" /etc/openldap/slapd.conf
 
@@ -84,17 +82,20 @@ set -e
     sed -i "s|o: Example|o: $SLAPD_ORGANIZATION|g" /etc/openldap/modules/base.ldif
     sed -i "s|description: My LDAP Server|description: $SLAPD_DESCRIPTION|g" /etc/openldap/modules/base.ldif
 
-    # Check if we need to install the default database.
-    # Exclude DB_CONFIG.example from the list of files, because it was installed by the package.
+    # Create a new database file
     echo -n 'Data directory is empty, generating database...'
     cp /var/lib/openldap/openldap-data/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG
     chown -R ldap:ldap /var/lib/openldap/openldap-data
     chmod 700 /var/lib/openldap/openldap-data
 
+    # Run slapd once to generate a database
     slapd -u ldap -g ldap >/dev/null 2>&1
     killall slapd
     echo 'Done.'
 
+    # Since Openldap version 2.3 all settings are stored in an online configuration
+    # which is stored in slapd.d/. Since it is much easier to configure
+    # the old config file slapd.conf, we use slaptest to convert the file
     slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d/
     # Add root nodes
     echo 'Adding root nodes...'
@@ -123,13 +124,15 @@ set -e
       unset IFS
     fi
 
+  # Your LDAP directory is now ready to be populated
+  echo "Finished setting up Openldap."
+
   else
     slapd_configs_in_env=`env | grep 'SLAPD_'`
 
     if [ -n "${slapd_configs_in_env:+x}" ]; then
-        echo "Info: Container already configured, therefore ignoring SLAPD_xxx environment variables"
+        echo "Info: Container already configured, for security reasons remove the SLAPD_* environment variables"
     fi
 fi
-
 
 exec "$@"
