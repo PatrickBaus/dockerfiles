@@ -42,4 +42,5 @@ EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["supervisord"]
+CMD supervisord -c /etc/supervisor.d/default.ini
+#CMD ["supervisord"]
