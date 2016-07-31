@@ -11,15 +11,16 @@ ulimit -n 8192
 
 # Run this on first start
 # Make sure the config folder does *not* exist or is empty
-if [[ ! -d "/etc/openldap/slapd.d" ]] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; then
+if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; then
+  echo "Could not find OpenLDAP configuration. Starting setup..."
   # First do some sanity checks
-  if [[ -z "$SLAPD_PASSWORD" ]]; then
+  if [ -z "${SLAPD_PASSWORD+x}" ]; then
     echo -n >&2 "Error: Container not configured and SLAPD_PASSWORD not set. "
     echo >&2 "Did you forget to add -e SLAPD_PASSWORD=... ?"
     exit 1
   fi
 
-  if [[ -z "$SLAPD_DOMAIN" ]]; then
+  if [ -z "${SLAPD_DOMAIN+x}" ]; then
     echo -n >&2 "Error: Container not configured and SLAPD_DOMAIN not set. "
     echo >&2 "Did you forget to add -e SLAPD_DOMAIN=... ?"
     exit 1
@@ -37,7 +38,7 @@ if [[ ! -d "/etc/openldap/slapd.d" ]] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]
   mkdir -p /etc/openldap/slapd.d
 
   # Add additional schemas
-  if [ -n "$SLAPD_ADDITIONAL_SCHEMAS" ]; then
+  if [ -n "${SLAPD_ADDITIONAL_SCHEMAS+x}" ]; then
     IFS=','
     schemas=$SLAPD_ADDITIONAL_SCHEMAS
     for schema in ${schemas}; do
@@ -81,10 +82,10 @@ if [[ ! -d "/etc/openldap/slapd.d" ]] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]
 
   # Configure base directory
   sed -i "s|dc=example,dc=net|$base_string|g" /etc/openldap/slapd.conf
-  sed -i "s|dc=example,dc=net|$base_string|g" /etc/openldap/modules/base.ldif
-  sed -i "s|dc: example|dc: $odc|g" /etc/openldap/modules/base.ldif
-  sed -i "s|o: Example|o: $SLAPD_ORGANIZATION|g" /etc/openldap/modules/base.ldif
-  sed -i "s|description: My LDAP Server|description: $SLAPD_DESCRIPTION|g" /etc/openldap/modules/base.ldif
+  sed -i "s|dc=example,dc=net|$base_string|g" /etc/openldap/database/base.ldif
+  sed -i "s|dc: example|dc: $odc|g" /etc/openldap/database/base.ldif
+  sed -i "s|o: Example|o: $SLAPD_ORGANIZATION|g" /etc/openldap/database/base.ldif
+  sed -i "s|description: My LDAP Server|description: $SLAPD_DESCRIPTION|g" /etc/openldap/database/base.ldif
 
   # Create a new database file
   echo -n 'Data directory is empty, generating database...'
@@ -101,23 +102,18 @@ if [[ ! -d "/etc/openldap/slapd.d" ]] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]
   # which is stored in slapd.d/. Since it is much easier to configure
   # the old config file slapd.conf, we use slaptest to convert the file
   slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d/
-  # Add root nodes
-  echo 'Adding root nodes...'
-  # No need to add -F, beause we have set this in OPTS
-  slapadd -v -l /etc/openldap/modules/base.ldif
 
   chown -R ldap:ldap /etc/openldap/slapd.d
   su ldap -s /bin/sh -c slapindex
 
-  if [[ -n "$SLAPD_ADDITIONAL_MODULES" ]]; then
+  if [ -n "${SLAPD_ADDITIONAL_MODULES+x}" ]; then
     IFS=","
     modules=$SLAPD_ADDITIONAL_MODULES;
 
-    for module in "${modules}"; do
+    for module in ${modules}; do
       module_file="/etc/openldap/modules/${module}.ldif"
       echo "Adding module ${module} to database..."
       if [ -e "${module_file}" ]; then
-        # No need to add -F, beause we have set this in OPTS
         slapadd -n0 -l "${module_file}"
       else
         echo -n >&2 "Error: Cannot find module ${module_file}. "
@@ -128,8 +124,31 @@ if [[ ! -d "/etc/openldap/slapd.d" ]] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]
     unset IFS
   fi
 
+  # Add root nodes
+  echo '------------------------------------------------'
+  echo 'Adding root nodes...'
+  slapadd -v -l /etc/openldap/database/base.ldif
+  if [ -n "${SLAPD_ADDITIONAL_IMPORTS+x}" ]; then
+    IFS=","
+    imports=$SLAPD_ADDITIONAL_IMPORTS;
+
+    for import in ${imports}; do
+      import_file="/etc/openldap/database/${import}.ldif"
+      if [ -e "${import_file}" ]; then
+        echo '------------------------------------------------'
+        echo "Adding data file ${import}.ldif to database..."
+        slapadd -v -l "${import_file}"
+      else
+        echo -n >&2 "Error: Cannot find data file ${import_file}. "
+        echo >&2 "Did you forget to copy it to database/ ?"
+        exit 1
+      fi
+    done
+    unset IFS
+  fi
+
   # Your LDAP directory is now ready to be populated
-  echo "Finished setting up Openldap."
+  echo "Finished setting up OpenLDAP."
 
 else
   slapd_configs_in_env=$(env | grep 'SLAPD_' || true)

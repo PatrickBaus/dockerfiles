@@ -20,7 +20,7 @@ RUN  apk update \
 COPY slapd.conf /etc/openldap/slapd.conf
 
 COPY modules/ /etc/openldap/modules
-
+COPY database/ /etc/openldap/database
 COPY schema/ /etc/openldap/schema
 
 COPY entrypoint.sh /

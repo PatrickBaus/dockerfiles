@@ -1,0 +1,5 @@
+# Ignore every file...
+*
+# but the base.ldif file
+!.gitignore
+!base.ldif
