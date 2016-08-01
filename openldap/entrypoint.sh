@@ -5,6 +5,9 @@
 # and do not mask errors in pipelines (using |) (-o pipefail)
 set -euo pipefail
 
+LDAP_USER="ldap"
+LDAP_GROUP="ldap"
+
 # When not limiting the open file descritors limit, the memory consumption of
 # slapd is absurdly high. See https://github.com/docker/docker/issues/8231
 ulimit -n 8192
@@ -65,17 +68,7 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
   sed -i "s|rootpw.*|rootpw		${password_hash}|g" /etc/openldap/slapd.conf
 
   # Generate the base string from the domain
-  dc_string=''
-  IFS='.'
-  odc=''
-  dc_parts=$SLAPD_DOMAIN
-  for dc_part in ${dc_parts}; do
-    [ -z "${dc_string}" ] && odc="${dc_part}"
-      dc_string="${dc_string},dc=${dc_part}"
-  done
-  unset IFS
-  # Remove leading ','
-  base_string="${dc_string:1}"
+  base_string="$(echo dc=$(echo ${SLAPD_DOMAIN} | sed 's/^\.//; s/\./,dc=/g'))"
 
   # Append domain name to the organization
   SLAPD_ORGANIZATION="${SLAPD_ORGANIZATION:-${SLAPD_DOMAIN}}"
@@ -83,18 +76,17 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
   # Configure base directory
   sed -i "s|dc=example,dc=net|$base_string|g" /etc/openldap/slapd.conf
   sed -i "s|dc=example,dc=net|$base_string|g" /etc/openldap/database/base.ldif
-  sed -i "s|dc: example|dc: $odc|g" /etc/openldap/database/base.ldif
+  sed -i "s|dc: example|dc: $(echo ${SLAPD_DOMAIN} | sed -n 's/^\([A-Za-z0-9_-]\+\).*/\1/p')|g" /etc/openldap/database/base.ldif
   sed -i "s|o: Example|o: $SLAPD_ORGANIZATION|g" /etc/openldap/database/base.ldif
   sed -i "s|description: My LDAP Server|description: $SLAPD_DESCRIPTION|g" /etc/openldap/database/base.ldif
 
   # Create a new database file
   echo -n 'Data directory is empty, generating database...'
   cp /var/lib/openldap/openldap-data/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG
-  chown -R ldap:ldap /var/lib/openldap/openldap-data
-  chmod 700 /var/lib/openldap/openldap-data
+  chown -R "${LDAP_USER}:${LDAP_GROUP}" /var/lib/openldap/openldap-data
 
   # Run slapd once to generate a database
-  slapd -u ldap -g ldap >/dev/null 2>&1
+  slapd -u "${LDAP_USER}" -g "${LDAP_GROUP}" >/dev/null 2>&1
   killall slapd
   echo 'Done.'
 
@@ -102,9 +94,6 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
   # which is stored in slapd.d/. Since it is much easier to configure
   # the old config file slapd.conf, we use slaptest to convert the file
   slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d/
-
-  chown -R ldap:ldap /etc/openldap/slapd.d
-  su ldap -s /bin/sh -c slapindex
 
   if [ -n "${SLAPD_ADDITIONAL_MODULES+x}" ]; then
     IFS=","
@@ -127,6 +116,7 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
   # Add root nodes
   echo '------------------------------------------------'
   echo 'Adding root nodes...'
+  echo "$(cat /etc/openldap/database/base.ldif)"
   slapadd -v -l /etc/openldap/database/base.ldif
   if [ -n "${SLAPD_ADDITIONAL_IMPORTS+x}" ]; then
     IFS=","
@@ -146,6 +136,17 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
     done
     unset IFS
   fi
+
+  # Set permissions
+  echo -n "Setting permission to ${LDAP_USER}:${LDAP_GROUP}..."
+  chown -R "${LDAP_USER}:${LDAP_GROUP}" /etc/openldap/slapd.d
+  chmod 700 /var/lib/openldap/openldap-data
+  echo "Done."
+
+  echo -n "Reindexing database..."
+  chown -R "${LDAP_USER}:${LDAP_GROUP}" /etc/openldap/slapd.d
+  su "${LDAP_USER}" -s /bin/sh -c slapindex
+  echo "Done."
 
   # Your LDAP directory is now ready to be populated
   echo "Finished setting up OpenLDAP."
