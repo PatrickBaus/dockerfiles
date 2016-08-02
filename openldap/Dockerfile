@@ -24,6 +24,7 @@ COPY database/ /etc/openldap/database
 COPY schema/ /etc/openldap/schema
 
 COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 389
 

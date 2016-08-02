@@ -37,6 +37,7 @@ COPY phpldapadmin_conf/config.php /usr/share/webapps/phpldapadmin/config/
 COPY supervisor_conf/default.ini /etc/supervisor.d/
 
 COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 
