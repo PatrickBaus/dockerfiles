@@ -6,8 +6,7 @@ MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 # ENV TERM xterm
 
 # Install nginx and phpldapadmin
-RUN  apk update \
-  && apk add php-fpm \
+RUN apk -U add php-fpm \
   && apk add phpldapadmin \
   && apk add supervisor \
   # Uncomment this for debugging

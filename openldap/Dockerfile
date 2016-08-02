@@ -6,8 +6,7 @@ MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 # ENV TERM xterm
 
 # Install openldap
-RUN  apk update \
-  && apk add openldap \
+RUN apk -U add openldap \
   # Uncomment this for debugging
   # If enabling nano, make sure the xterm enviroment variable is set as well (see above)
   # && apk add openldap-clients \
