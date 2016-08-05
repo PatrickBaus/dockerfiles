@@ -45,7 +45,15 @@ NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
   php5-opcache \
   php5-fpm \
 "
+# To colour the bash use the following command:
+# echo -e "${COLOUR}foo\e[0m"
+COLOUR='\e[1;93m'
+
+echo -ne "${COLOUR}Installing PHP and extensions for Nextcloud...\e[0m"
 apk add -U ${NEXTCLOUD_DEPS}
+echo -e "${COLOUR}Done.\e[0m"
 
 # Clean up
+echo -ne "${COLOUR}Cleaning up...\e[0m"
 rm -rf /var/cache/apk/*
+echo -e "${COLOUR}Done.\e[0m"
