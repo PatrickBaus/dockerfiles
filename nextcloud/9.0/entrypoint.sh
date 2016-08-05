@@ -5,10 +5,8 @@
 # and do not mask errors in pipelines (using |) (-o pipefail)
 set -euo pipefail
 
-mkdir -p /tmp/fastcgi /tmp/client_body
-
 # Set the permissions of the container
-echo -n 'Settings permissions for the config/data folders...'
+echo -n 'Settings permissions for the Nextcloud config/data folders...'
 chown -R nginx /var/www/nextcloud/config/
 chown -R nginx /var/www/nextcloud/data/
 chown -R nginx /var/www/nextcloud/apps_persisted
