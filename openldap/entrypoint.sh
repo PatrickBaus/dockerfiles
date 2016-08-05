@@ -116,7 +116,6 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
   # Add root nodes
   echo '------------------------------------------------'
   echo 'Adding root nodes...'
-  echo "$(cat /etc/openldap/database/base.ldif)"
   slapadd -v -l /etc/openldap/database/base.ldif
   if [ -n "${SLAPD_ADDITIONAL_IMPORTS+x}" ]; then
     IFS=","
