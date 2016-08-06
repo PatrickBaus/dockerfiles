@@ -25,7 +25,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /var/log/nginx
 
 # Copy the default php-fpm config to the image
-# Do not touch this file unless you know what you doing
+# Do not touch these files unless you know what you doing
 COPY php-fpm_conf/php-fpm.conf /etc/php/
 COPY php-fpm_conf/www.conf /etc/php/php-fpm.d/
 
@@ -33,6 +33,8 @@ COPY php-fpm_conf/www.conf /etc/php/php-fpm.d/
 # Do not touch this file unless you know what you doing
 COPY phpldapadmin_conf/config.php /usr/share/webapps/phpldapadmin/config/
 
+# Copy the default supervisord config to the image
+# Do not touch this file unless you know what you doing
 COPY supervisor_conf/default.ini /etc/supervisor.d/
 
 COPY entrypoint.sh /
