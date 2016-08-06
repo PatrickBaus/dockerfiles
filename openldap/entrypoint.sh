@@ -5,6 +5,10 @@
 # and do not mask errors in pipelines (using |) (-o pipefail)
 set -euo pipefail
 
+# To colour the bash use the following command:
+# echo -e "${COLOUR}foo\e[0m"
+COLOUR='\e[1;93m'
+
 LDAP_USER="ldap"
 LDAP_GROUP="ldap"
 
@@ -154,7 +158,7 @@ else
   slapd_configs_in_env=$(env | grep 'SLAPD_' || true)
 
   if [ -n "${slapd_configs_in_env}" ]; then
-    echo "WARN Container already configured, for security reasons remove the SLAPD_* environment variables"
+    echo -e "${COLOUR}WARN Container already configured, for security reasons remove the SLAPD_* environment variables\e[0m"
   fi
 fi
 
