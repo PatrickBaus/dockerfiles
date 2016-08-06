@@ -32,7 +32,7 @@ RUN chmod +x /install_php.sh
 RUN /install_php.sh
 
 # Copy the default php and php-fpm config to the image
-# Do not touch this file unless you know what you doing
+# Do not touch these files unless you know what you doing
 COPY php-fpm_conf/php-fpm.conf /etc/php5/
 COPY php-fpm_conf/www.conf /etc/php5/php-fpm.d/
 
@@ -45,7 +45,7 @@ RUN chmod +x /install_nextcloud.sh
 RUN /install_nextcloud.sh
 
 # Copy the default Nextcloud config to the image
-# Do not touch this file unless you know what you doing
+# Do not touch these files unless you know what you doing
 COPY nextcloud_conf/config.php /var/www/nextcloud/config/
 COPY nextcloud_conf/autoconfig.php /var/www/nextcloud/config/
 
@@ -62,7 +62,7 @@ RUN chmod +x /install_nginx.sh
 RUN /install_nginx.sh
 
 # Copy the default nginx config to the image
-# Do not touch this file unless you know what you doing
+# Do not touch these files unless you know what you doing
 COPY nginx_conf/php-fpm.conf /etc/nginx/conf.d/
 COPY nginx_conf/nginx.conf /etc/nginx/
 # Install the nginx phpldapadmin configuration
