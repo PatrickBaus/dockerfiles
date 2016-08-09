@@ -1,12 +1,12 @@
 FROM alpine
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-ARG NEXTCLOUD_VERSION=9.0.2
+ARG NEXTCLOUD_VERSION=9.0.53
 ARG LIBICONV_VERSION=1.14
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
-#ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ENV GPG_NEXTCLOUD="E3036906AD9F30807351FAC32D5D5E97F6978A26"
+ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
+#ENV GPG_NEXTCLOUD="E3036906AD9F30807351FAC32D5D5E97F6978A26"
 
 ENV GID=991 UID=991
 
@@ -50,9 +50,8 @@ COPY nextcloud_conf/config.php /var/www/nextcloud/config/
 COPY nextcloud_conf/autoconfig.php /var/www/nextcloud/config/
 
 # Install the Nextcloud cron job, which replaces AJAX cron
-COPY cron /etc/periodic/15min/nextcloud
+COPY nextcloud_conf/cron /etc/periodic/15min/nextcloud
 RUN chmod +x /etc/periodic/15min/nextcloud
-#RUN /etc/periodic/15min/nextcloud
 
 #############
 # Nginx     #
@@ -87,6 +86,9 @@ ENV TERM xterm
 RUN apk -U add nano
 RUN rm -rf /var/cache/apk/*
 
+# Run the Nextcloud cron job once. We need to run this after nginx was installed, because
+# it uses the nginx user account.
+RUN /etc/periodic/15min/nextcloud
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh

@@ -8,8 +8,8 @@ $CONFIG = array (
               'writable' => false,
       ),
       1 => array (
-              'path'     => '/var/www/nextcloud/apps_persisted',
-              'url'      => '/apps_added',
+              'path'     => '/var/www/nextcloud/apps_installed',
+              'url'      => '/apps_installed',
               'writable' => true,
       ),
   ),

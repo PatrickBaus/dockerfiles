@@ -16,21 +16,21 @@ apk add -U $BUILD_DEPS
 mkdir -p /var/www/nextcloud
 
 NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2"
-NEXTCLOUD_TARBALL="owncloud-${NEXTCLOUD_VERSION}.tar.bz2"
+#NEXTCLOUD_TARBALL="owncloud-${NEXTCLOUD_VERSION}.tar.bz2"
 
 # Create a temporary folder, which will later be removed
 temp_dir="$(mktemp -d)"
 cd ${temp_dir}
 echo -ne "${COLOUR}Downloading source...\e[0m"
-wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}"
-wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}.sha256"
-wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}.asc"
-echo -e "${COLOUR}Done.\e[0m"
+#wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}"
+#wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}.sha256"
+#wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}.asc"
 
-#  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} && \
-#  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 && \
-#  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc && \
-#  wget -q https://nextcloud.com/nextcloud.asc && \
+wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}
+wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256
+wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc
+#wget -q https://nextcloud.com/nextcloud.asc
+echo -e "${COLOUR}Done.\e[0m"
 
 echo -ne "${COLOUR}Verifying integrity of ${NEXTCLOUD_TARBALL}...\e[0m"
 CHECKSUM_STATE=$(echo -n $(sha256sum -c "${NEXTCLOUD_TARBALL}.sha256") | tail -c 2)
