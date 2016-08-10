@@ -39,7 +39,7 @@ RUN rm -rf /var/cache/apk/*
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 8000 4430
+EXPOSE 80 443
 
 #VOLUME /sites-enabled /www /conf.d /passwds /certs /var/log/nginx
 
