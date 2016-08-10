@@ -2,17 +2,12 @@ FROM nginx:alpine
 
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-# Uncomment this to enable a terminal for nano
-# ENV TERM xterm
-
 # Install nginx and phpldapadmin
-RUN apk -U add php-fpm \
-  && apk add phpldapadmin \
-  && apk add supervisor \
-  # Uncomment this for debugging
-  # If enabling nano, make sure the xterm enviroment variable is set as well (see above)
-  # && apk add nano \
-  && rm -rf /var/cache/apk/*
+RUN apk -U add
+  php-fpm \
+  phpldapadmin \
+  supervisor
+RUN rm -rf /var/cache/apk/*
 
 # Copy the default nginx config to the image
 # Do not touch this file unless you know what you doing
@@ -36,6 +31,14 @@ COPY phpldapadmin_conf/config.php /usr/share/webapps/phpldapadmin/config/
 # Copy the default supervisord config to the image
 # Do not touch this file unless you know what you doing
 COPY supervisor_conf/default.ini /etc/supervisor.d/
+
+#############
+# Debug     #
+#############
+# Uncomment this to enable a terminal for nano
+#ENV TERM xterm
+#RUN apk -U add nano
+#RUN rm -rf /var/cache/apk/*
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh

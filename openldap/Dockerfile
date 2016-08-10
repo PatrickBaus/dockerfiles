@@ -2,17 +2,11 @@ FROM alpine
 
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-# Uncomment this to enable a terminal for nano
-# ENV TERM xterm
-
 # Install openldap
-RUN apk -U add openldap \
-  su-exec \
-  # Uncomment this for debugging
-  # If enabling nano, make sure the xterm enviroment variable is set as well (see above)
-  # && apk add openldap-clients \
-  # && apk add nano \
-  && rm -rf /var/cache/apk/*
+RUN apk -U add \
+  openldap \
+  su-exec
+RUN rm -rf /var/cache/apk/*
 
 # Copy the default slapd config to the image
 # Do not touch this file unless you know what you doing
@@ -22,6 +16,14 @@ COPY slapd.conf /etc/openldap/slapd.conf
 COPY modules/ /etc/openldap/modules
 COPY database/ /etc/openldap/database
 COPY schema/ /etc/openldap/schema
+
+#############
+# Debug     #
+#############
+# Uncomment this to enable a terminal for nano
+#ENV TERM xterm
+#RUN apk -U add nano
+#RUN rm -rf /var/cache/apk/*
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
