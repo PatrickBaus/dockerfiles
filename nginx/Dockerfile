@@ -1,5 +1,5 @@
 FROM alpine
-MAINTAINER Wonderfall <wonderfall@schrodinger.io>
+MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
 ENV UID=991 GID=991
 

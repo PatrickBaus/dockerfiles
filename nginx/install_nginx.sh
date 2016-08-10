@@ -13,21 +13,6 @@ NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz"
 # To colour the bash use the following command:
 # echo -e "${COLOUR}foo\e[0m"
 COLOUR='\e[1;93m'
-BUILD_DEPS=" \
-    build-base \
-    linux-headers \
-    file \
-    ca-certificates \
-    automake \
-    autoconf \
-    git \
-    tar \
-    libtool \
-    pcre-dev \
-    zlib-dev \
-    binutils \
-    gnupg \
-"
 
 echo -ne "${COLOUR}Installing build dependencies...\e[0m"
 apk -U add --virtual=build-dependencies \
