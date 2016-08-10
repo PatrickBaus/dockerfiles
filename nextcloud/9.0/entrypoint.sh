@@ -9,7 +9,7 @@ set -euo pipefail
 echo -n 'Settings permissions for the Nextcloud config/data folders...'
 chown -R nginx /var/www/nextcloud/config/
 chown -R nginx /var/www/nextcloud/data/
-chown -R nginx /var/www/nextcloud/apps_persisted
+chown -R nginx /var/www/nextcloud/apps_installed
 echo 'Done.'
 
 exec "$@"
