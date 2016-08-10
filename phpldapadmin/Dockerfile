@@ -3,7 +3,7 @@ FROM nginx:alpine
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
 # Install nginx and phpldapadmin
-RUN apk -U add
+RUN apk -U add \
   php-fpm \
   phpldapadmin \
   supervisor
