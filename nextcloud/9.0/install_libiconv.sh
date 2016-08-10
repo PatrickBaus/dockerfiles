@@ -5,13 +5,12 @@
 # and do not mask errors in pipelines (using |) (-o pipefail)
 set -euo pipefail
 
-BUILD_DEPS="build-base openssl ca-certificates file gnupg libtool"
 # To colour the bash use the following command:
 # echo -e "${COLOUR}foo\e[0m"
 COLOUR='\e[1;93m'
 
 echo -ne "${COLOUR}Installing build dependencies...\e[0m"
-apk add -U $BUILD_DEPS
+apk add -U --virtual=build-dependencies build-base openssl ca-certificates file gnupg libtool
 echo -e "${COLOUR}Done.\e[0m"
 
 # Get the number of CPU cores
@@ -60,6 +59,6 @@ echo -e "${COLOUR}Done.\e[0m"
 
 # Clean up
 echo -ne "${COLOUR}Cleaning up...\e[0m"
-apk del $BUILD_DEPS
+apk del build-dependencies
 rm -rf /var/cache/apk/* ${temp_dir}
 echo -e "${COLOUR}Done.\e[0m"

@@ -30,13 +30,27 @@ BUILD_DEPS=" \
 "
 
 echo -ne "${COLOUR}Installing build dependencies...\e[0m"
-apk -U add ${BUILD_DEPS} \
+apk -U add --virtual=build-dependencies \
+  build-base \
+  linux-headers \
+  file \
+  ca-certificates \
+  automake \
+  autoconf \
+  git \
+  tar \
+  libtool \
+  pcre-dev \
+  zlib-dev \
+  binutils \
+  gnupg \
+  openssl
+
+apk add \
     pcre \
     zlib \
     libgcc \
     libstdc++ \
-    su-exec \
-    openssl \
     bind-tools
 echo -e "${COLOUR}Done.\e[0m"
 
@@ -140,6 +154,6 @@ echo -e "${COLOUR}Done.\e[0m"
 echo -ne "${COLOUR}Cleaning up...\e[0m"
 cd /
 strip -s /usr/sbin/nginx
-apk del ${BUILD_DEPS}
+apk del build-dependencies
 rm -rf /var/cache/apk/* ${temp_dir}
 echo -e "${COLOUR}Done.\e[0m"

@@ -5,12 +5,13 @@
 # and do not mask errors in pipelines (using |) (-o pipefail)
 set -euo pipefail
 
-BUILD_DEPS="gnupg tar"
 # To colour the bash use the following command:
 # echo -e "${COLOUR}foo\e[0m"
 COLOUR='\e[1;93m'
 
-apk add -U $BUILD_DEPS
+apk add -U --virtual=build-dependencies gnupg tar
+# Required to run the cron job
+apk add su-exec
 
 # Create folder for the nextcloud installation
 mkdir -p /var/www/nextcloud
@@ -53,6 +54,6 @@ tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /var/www/nextcloud
 echo -e "${COLOUR}Done.\e[0m"
 
 echo -ne "${COLOUR}Cleaning up...\e[0m"
-apk del $BUILD_DEPS
+apk del build-dependencies
 rm -rf /var/cache/apk/* ${temp_dir}
 echo -e "${COLOUR}Done.\e[0m"

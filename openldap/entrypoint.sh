@@ -148,7 +148,7 @@ if [ ! -d "/etc/openldap/slapd.d" ] || [ -z "$(ls -A /etc/openldap/slapd.d)" ]; 
 
   echo -n "Reindexing database..."
   chown -R "${LDAP_USER}:${LDAP_GROUP}" /etc/openldap/slapd.d
-  su "${LDAP_USER}" -s /bin/sh -c slapindex
+  su-exec "${LDAP_USER}" -s /bin/sh -c slapindex
   echo "Done."
 
   # Your LDAP directory is now ready to be populated

@@ -1,3 +1,3 @@
 #!/bin/sh
 # We need to pass a shell, because the user does not have one
-su - nginx -s "/bin/sh" -c "php -f /var/www/nextcloud/cron.php" > /dev/null 2>&1
+su-exec nginx php -f /var/www/nextcloud/cron.php > /dev/null 2>&1
