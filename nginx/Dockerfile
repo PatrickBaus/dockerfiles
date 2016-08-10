@@ -19,9 +19,9 @@ RUN /install_nginx.sh
 # Copy the default nginx config to the image
 # Do not touch these files unless you know what you doing
 COPY nginx_conf/nginx.conf /etc/nginx/conf/nginx.conf
-COPY nginx_conf/vhost_http.conf /etc/nginx/sites-enabled/proxy.conf
+COPY nginx_conf/vhost_https.conf /etc/nginx/sites-enabled/proxy.conf
 COPY nginx_conf/ssl_params /etc/nginx/conf/ssl_params
-COPY nginx_conf/headers_params /etc/nginx/conf/headers_param
+COPY nginx_conf/headers_params /etc/nginx/conf/headers_params
 COPY nginx_conf/proxy_params /etc/nginx/conf/proxy_params
 
 # Copy helper scripts to the image

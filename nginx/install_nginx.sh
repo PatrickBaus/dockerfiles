@@ -101,6 +101,7 @@ cd nginx-${NGINX_VERSION}
   --with-cc-opt='-O3 -fPIE -fstack-protector-strong -Wformat -Werror=format-security' \
   --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
   --with-openssl="${temp_dir}/libressl-${LIBRESSL_VERSION}" \
+  --with-http_ssl_module \
   --with-http_v2_module \
   --with-http_gzip_static_module \
   --with-http_stub_status_module \
@@ -126,8 +127,10 @@ make install
 make clean
 
 # forward request and error logs to docker log collector
-#ln -sf /dev/stdout /var/log/nginx/access.log
-#ln -sf /dev/stderr /var/log/nginx/error.log
+# Redirect to STDOUT/STDERROR of PID 1, because PID 1 is the
+# process launched by docker
+ln -sf /proc/1/fd/1 /var/log/nginx/access.log
+ln -sf /proc/1/fd/2 /var/log/nginx/error.log
 
 # The latest version of nginx stores its pid in /run/nginx/
 mkdir -p /run/nginx
