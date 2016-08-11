@@ -2,7 +2,7 @@ FROM nginx:alpine
 
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-# Install nginx and phpldapadmin
+# Install php and phpldapadmin
 RUN apk -U add \
   php-fpm \
   phpldapadmin \
@@ -31,6 +31,16 @@ COPY phpldapadmin_conf/config.php /usr/share/webapps/phpldapadmin/config/
 # Copy the default supervisord config to the image
 # Do not touch this file unless you know what you doing
 COPY supervisor_conf/default.ini /etc/supervisor.d/
+
+# Now apply a set of patches to phpLDAPadmin, which fixes issues
+# with the current master. For details see
+# https://github.com/PatrickBaus/phpLDAPadmin
+RUN mkdir -p /patches
+COPY patches/* /patches/
+RUN cd /usr/share/webapps/phpldapadmin \
+  && patch -p0 < /patches/proxy_ssl.patch \
+  && patch -p0 < /patches/request_smuggling.patch \
+  && rm -rf /patches
 
 #############
 # Debug     #
