@@ -24,6 +24,10 @@ COPY nginx_conf/ssl_params /etc/nginx/conf/ssl_params
 COPY nginx_conf/headers_params /etc/nginx/conf/headers_params
 COPY nginx_conf/proxy_params /etc/nginx/conf/proxy_params
 
+# Copy certificates to the image
+COPY server.crt /etc/nginx/certs
+COPY server.key /etc/nginx/certs
+
 # Copy helper scripts to the image
 COPY ngxproxy /usr/local/bin/ngxproxy
 RUN chmod +x /usr/local/bin/ngxproxy
