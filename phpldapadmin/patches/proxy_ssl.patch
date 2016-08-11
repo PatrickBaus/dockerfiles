@@ -16,7 +16,7 @@ index f16bdbf..37f0e38 100644
 +# Check if a proxy server downstream does encryption for us
 +elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower($_SERVER['HTTP_X_FORWARDED_SSL'])
 +== 'on') {
-+        $isHTTPS = false;
++        $isHTTPS = true;
 +}
 +
 +if (!$isHTTPS) {
