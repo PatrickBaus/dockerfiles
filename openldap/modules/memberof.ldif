@@ -1,4 +1,5 @@
 dn: cn=module,cn=config
+changetype: add
 cn: module
 objectClass: olcModuleList
 objectClass: top
@@ -6,6 +7,7 @@ olcModulePath: /usr/lib/openldap
 olcModuleLoad: memberof
 
 dn: olcOverlay={0}memberof,olcDatabase={1}mdb,cn=config
+changetype: add
 objectClass: olcConfig
 objectClass: olcMemberOf
 objectClass: olcOverlayConfig
@@ -18,6 +20,7 @@ olcMemberOfMemberAD: member
 olcMemberOfMemberOfAD: memberOf
 
 dn: cn=module,cn=config
+changetype: add
 cn: module
 objectClass: olcModuleList
 objectClass: top
@@ -25,9 +28,15 @@ olcModulePath: /usr/lib/openldap
 olcModuleLoad: refint
 
 dn: olcOverlay={1}refint,olcDatabase={1}mdb,cn=config
+changetype: add
 objectClass: olcConfig
 objectClass: olcOverlayConfig
 objectClass: olcRefintConfig
 objectClass: top
 olcOverlay: {1}refint
 olcRefintAttribute: memberof member manager owner
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcDbIndex
+olcDbIndex: memberof eq

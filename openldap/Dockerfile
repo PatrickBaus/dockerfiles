@@ -5,16 +5,17 @@ MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 # Install openldap
 RUN apk -U add \
   openldap \
+  openldap-clients \
   su-exec
 RUN rm -rf /var/cache/apk/*
 
 # Copy the default slapd config to the image
 # Do not touch this file unless you know what you doing
 # It will be modified by the startup script
-COPY slapd.conf /etc/openldap/slapd.conf
+COPY slapd.conf /etc/openldap/slapd.conf.default
 
 COPY modules/ /etc/openldap/modules
-COPY database/ /etc/openldap/database
+COPY data/ /etc/openldap/data
 COPY schema/ /etc/openldap/schema
 
 #############

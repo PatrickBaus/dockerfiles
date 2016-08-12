@@ -1,0 +1,19 @@
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcDbIndex
+olcDbIndex: objectClass eq
+-
+add: olcDbIndex
+olcDbIndex: uid pres,sub,eq
+-
+add: olcDbIndex
+olcDbIndex: mail pres,sub,eq
+-
+add: olcDbIndex
+olcDbIndex: cn pres,sub,eq
+-
+add: olcDbIndex
+olcDbIndex: sn pres,sub,eq
+-
+add: olcDbIndex
+olcDbIndex: dc eq

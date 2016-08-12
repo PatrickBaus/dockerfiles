@@ -1,0 +1,6 @@
+# Ignore all files...
+*
+# but the base.ldif file so we do not leak any private
+# information by acciendent.
+!.gitignore
+!base.ldif

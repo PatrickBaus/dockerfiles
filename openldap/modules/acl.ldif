@@ -1,0 +1,88 @@
+# usage: sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f acl.ldif
+# ACL
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+#Allow access to the password field only to ldap-manager or the users themselves
+add: olcAccess
+#delete: olcAccess
+olcAccess: to dn.subtree="dc=server2,dc=maat-family,dc=de" attrs=userPassword,shadowLastChange,sambaNTPassword,sambaPwdLastSet
+  by group.exact="cn=ldap-manager,ou=groups,dc=server2,dc=maat-family,dc=de" write
+  by anonymous auth
+  by self write
+  by * none
+-
+# Allow entries in the root dn to be read by users
+add: olcAccess
+olcAccess: to dn.base="dc=server2,dc=maat-family,dc=de" attrs=entry
+  by group.exact="cn=ldap-manager,ou=groups,dc=server2,dc=maat-family,dc=de" read
+  by dn="cn=apache-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by users read
+-
+# Allow Postfix to search for and read its domains
+add: olcAccess
+olcAccess: to filter="(objectclass=transportTable)"
+  by dn="cn=postfix-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+-
+# Allow entries in the root dn to be written by ldap-managers
+add: olcAccess
+olcAccess: to dn.base="dc=server2,dc=maat-family,dc=de" attrs=children
+  by group.exact="cn=ldap-manager,ou=groups,dc=server2,dc=maat-family,dc=de" write
+  by users read
+-
+# Allow apache to read its groups
+add: olcAccess
+olcAccess: to dn.regex="cn=apache-.*,ou=groups,dc=server2,dc=maat-family,dc=de"
+  by dn="cn=apache-account,ou=machines,dc=server2,dc=maat-family,dc=de" compare
+  by * none
+-
+# Allow prosody to read its group
+add: olcAccess
+olcAccess: to dn="cn=prosody-admnistrator,ou=groups,dc=server2,dc=maat-family,dc=de"
+  by dn="cn=prosody-account,ou=machines,dc=server2,dc=maat-family,dc=de" compare
+  by * none
+-
+# Allow Samba to create its "sambaDomainName entry and acces its groups
+add: olcAccess
+olcAccess: to dn.subtree="sambaDomainName=SERVER,dc=server2,dc=maat-family,dc=de"
+  by dn="cn=samba-account,ou=machines,dc=server2,dc=maat-family,dc=de" write
+  by * none
+-
+add: olcAccess
+olcAccess: to dn="cn=Domain Users,ou=groups,dc=server2,dc=maat-family,dc=de"
+  by dn="cn=samba-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+-
+# Allow write access to all people by ldap-managers and read access by apache, dovecot, postfix, and prosody
+add: olcAccess
+olcAccess: to dn.one="ou=people,dc=server2,dc=maat-family,dc=de"
+  by self write
+  by group.exact="cn=ldap-manager,ou=groups,dc=server2,dc=maat-family,dc=de" write
+  by dn="cn=apache-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by dn="cn=dovecot-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by dn="cn=postfix-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by dn="cn=prosody-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by * none
+-
+add: olcAccess
+olcAccess: to dn.base="ou=people,dc=server2,dc=maat-family,dc=de" attrs=objectClass
+  by dn="cn=postfix-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+-
+add: olcAccess
+olcAccess: to dn.base="ou=people,dc=server2,dc=maat-family,dc=de" attrs=entry
+  by dn="cn=postfix-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by dn="cn=prosody-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+-
+# Allow read access to all machines by prosody
+add: olcAccess
+olcAccess: to dn.one="ou=machines,dc=server2,dc=maat-family,dc=de"
+  by dn="cn=prosody-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+  by * none
+-
+add: olcAccess
+olcAccess: to dn.base="ou=machines,dc=server2,dc=maat-family,dc=de" attrs=entry
+  by dn="cn=prosody-account,ou=machines,dc=server2,dc=maat-family,dc=de" read
+-
+# Allow read acces to the addressbook by the user, the CardDAV account and the phones
+# Allow write acces to the entry attribute to add entries by the CardDAV account
+add: olcAccess
+olcAccess: to dn.regex="ou=addressbooks,uid=([^,]+),ou=people,dc=server2,dc=maat-family,dc=de$" attrs=objectClass
+  by dn="cn=sabredav-account,ou=machines,dc=server2,dc=maat-family,dc=de" write

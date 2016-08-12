@@ -1,39 +1,39 @@
 # Edit this file to set up the base structure of the LDAP directory
-# "dc=example,dc=net" will be replaced by your domain.
+# All ${} variables will be replaced by the respective environment variable.
 # For example if the domain specified by $SLAPD_DOMAIN is
 # "this.is-my-domain.net"
-# "dc=example,dc=net" will be replaced by
+# "${SLAPD_DOMAIN}" will be replaced by
 # "dc=this,dc=is-my-domain,dc=net"
-# If you want to import backup data, place do not add this to this file,
+# If you want to import backup data, do not add this to this file,
 # but rather add it as a seperate ldif file to the modules/ folder,
-# because the base.ldif will be subject to automatic replacement (see above)
+# because the base.ldif will be subject to automatic replacement (see above).
 
-dn: dc=example,dc=net
-dc: example
-o: Example
-description: My LDAP Server
+dn: ${SLAPD_DOMAIN}
+dc: ${SLAPD_DC}
+o: ${SLAPD_ORGANIZATION}
+description: ${SLAPD_DESCRIPTION}
 objectclass: top
 objectclass: dcObject
 objectclass: organization
 
-dn: ou=groups,dc=example,dc=net
+dn: ou=groups,${SLAPD_DOMAIN}
 objectclass: organizationalUnit
 objectclass: top
 ou: groups
 description: Stores all access groups available
 
-dn: ou=people,dc=example,dc=net
+dn: ou=people,${SLAPD_DOMAIN}
 objectclass: organizationalUnit
 objectclass: top
 ou: people
 description: All registered human accounts, including address book entries
 
-dn: ou=machines,dc=example,dc=net
+dn: ou=machines,${SLAPD_DOMAIN}
 objectClass: organizationalUnit
 ou: machines
 description: All registered computer accounts
 
-dn: ou=certificates,dc=example,dc=net
+dn: ou=certificates,${SLAPD_DOMAIN}
 objectClass: organizationalUnit
 ou: certificates
 description: Fingerprints of all registered certificates, these can be used for authentication
