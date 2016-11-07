@@ -132,6 +132,12 @@ db_nextcloud:
 ```
 You can update everything with `docker-compose pull` followed by `docker-compose up -d`.
 
+If you need to upgrade the installation using `occ` this can be done with the following commands:
+```
+sudo docker exec -it nextcloud /bin/sh
+su -s /bin/sh -c 'php /var/www/nextcloud/occ upgrade' nginx
+```
+
 #### Reverse proxy
 You should be familiar with reverse proxying, otherwise you should read some documentation about it. If you're using nginx, there are two possibilites :
 - nginx is on the host : use the IP address you can get with `docker inspect nextcloud | grep IPAddress\" | head -n1 | grep -Eo "[0-9.]+" `. But whenever the container is restarted or recreated, its IP address can change.
