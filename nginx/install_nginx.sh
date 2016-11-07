@@ -97,7 +97,7 @@ cd nginx-${NGINX_VERSION}
 ./configure \
   --prefix=/etc/nginx \
   --sbin-path=/usr/sbin/nginx \
-  --with-cc-opt='-O3 -fPIE -fstack-protector-strong -Wformat -Werror=format-security' \
+  --with-cc-opt='-O3 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wno-deprecated-declarations' \
   --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
   --with-openssl="${temp_dir}/libressl-${LIBRESSL_VERSION}" \
   --with-http_ssl_module \
