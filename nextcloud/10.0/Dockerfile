@@ -1,7 +1,7 @@
 FROM alpine
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-ARG NEXTCLOUD_VERSION=9.0.54
+ARG NEXTCLOUD_VERSION=10.0.1
 ARG LIBICONV_VERSION=1.14
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
