@@ -10,8 +10,6 @@ set -euo pipefail
 COLOUR='\e[1;93m'
 
 apk add -U --virtual=build-dependencies gnupg tar
-# Required to run the cron job
-apk add su-exec
 
 # Create folder for the nextcloud installation
 mkdir -p /var/www/nextcloud
@@ -23,14 +21,9 @@ NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2"
 temp_dir="$(mktemp -d)"
 cd ${temp_dir}
 echo -ne "${COLOUR}Downloading source...\e[0m"
-#wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}"
-#wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}.sha256"
-#wget -q "https://download.owncloud.org/community/${NEXTCLOUD_TARBALL}.asc"
-
 wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}
 wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256
 wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc
-#wget -q https://nextcloud.com/nextcloud.asc
 echo -e "${COLOUR}Done.\e[0m"
 
 echo -ne "${COLOUR}Verifying integrity of ${NEXTCLOUD_TARBALL}...\e[0m"
@@ -41,7 +34,7 @@ if [ "${CHECKSUM_STATE}" != "OK" ]; then
 fi
 echo -e "${COLOUR}Done.\e[0m"
 
-echo -ne "${COLOUR}Verifying authenticity of ${NEXTCLOUD_TARBALL}...\e[0m"
+echo -e "${COLOUR}Verifying authenticity of ${NEXTCLOUD_TARBALL}...\e[0m"
 export GNUPGHOME=${temp_dir}
 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_NEXTCLOUD}"
 gpg --batch --verify "${NEXTCLOUD_TARBALL}.asc" "${NEXTCLOUD_TARBALL}"

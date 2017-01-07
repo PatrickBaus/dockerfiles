@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.5
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
 ARG NEXTCLOUD_VERSION=11.0.0
@@ -32,9 +32,24 @@ RUN /install_php.sh
 
 # Copy the default php and php-fpm config to the image
 # Do not touch these files unless you know what you doing
-COPY php-fpm_conf/php-fpm.conf /etc/php5/
-COPY php-fpm_conf/www.conf /etc/php5/php-fpm.d/
+COPY php-fpm_conf/php-fpm.conf /etc/php7/
+COPY php-fpm_conf/www.conf /etc/php7/php-fpm.d/
 
+#############
+# Nginx     #
+#############
+COPY install_nginx.sh /
+RUN chmod +x /install_nginx.sh
+RUN /install_nginx.sh
+
+# Copy the default nginx config to the image
+# Do not touch these files unless you know what you doing
+COPY nginx_conf/php-fpm.conf /etc/nginx/conf.d/
+COPY nginx_conf/nginx.conf /etc/nginx/
+# Install the nginx configuration
+COPY nginx_conf/nextcloud.conf /etc/nginx/conf.d/
+RUN chown -R nginx:nginx /var/log/nginx
+RUN rm /etc/nginx/conf.d/default.conf
 
 #############
 # Nextcloud #
@@ -54,20 +69,9 @@ COPY nextcloud_conf/autoconfig.php /var/www/nextcloud/config/
 COPY nextcloud_conf/cron /etc/periodic/15min/nextcloud
 RUN chmod +x /etc/periodic/15min/nextcloud
 
-#############
-# Nginx     #
-#############
-COPY install_nginx.sh /
-RUN chmod +x /install_nginx.sh
-RUN /install_nginx.sh
-
-# Copy the default nginx config to the image
-# Do not touch these files unless you know what you doing
-COPY nginx_conf/php-fpm.conf /etc/nginx/conf.d/
-COPY nginx_conf/nginx.conf /etc/nginx/
-# Install the nginx phpldapadmin configuration
-COPY nginx_conf/nextcloud.conf /etc/nginx/conf.d/
-RUN chown -R nginx:nginx /var/log/nginx
+# Run the Nextcloud cron job once. We need to run this after nginx was installed, because
+# it uses the nginx user account.
+RUN /etc/periodic/15min/nextcloud
 
 #############
 # Supervisor#
@@ -86,10 +90,6 @@ RUN rm -rf /var/cache/apk/*
 ENV TERM xterm
 RUN apk -U add nano
 RUN rm -rf /var/cache/apk/*
-
-# Run the Nextcloud cron job once. We need to run this after nginx was installed, because
-# it uses the nginx user account.
-RUN /etc/periodic/15min/nextcloud
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
