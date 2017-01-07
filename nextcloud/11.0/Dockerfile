@@ -42,6 +42,7 @@ COPY php-fpm_conf/www.conf /etc/php5/php-fpm.d/
 COPY install_nextcloud.sh /
 COPY upgrade_nextcloud.sh /
 RUN chmod +x /install_nextcloud.sh
+RUN chmod +x /upgrade_nextcloud.sh
 RUN /install_nextcloud.sh
 
 # Copy the default Nextcloud config to the image

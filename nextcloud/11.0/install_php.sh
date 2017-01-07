@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # For a list of required modules see:
-# https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
+# https://docs.nextcloud.com/server/11/admin_manual/installation/source_installation.html
 NEXTCLOUD_DEPS="\
   php5 \
   php5-ctype \
@@ -18,8 +18,14 @@ NEXTCLOUD_DEPS="\
   php5-zip \
   php5-zlib \
   php5-xml \
-  php5-xmlreader
+  php5-xmlreader \
 "
+
+# Optional dependencies for the nextcloud occ script
+NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
+  php5-pcntl
+"
+
 # Database connector
 NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
   php5-pdo_mysql
@@ -44,6 +50,7 @@ NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
   php5-apcu \
   php5-opcache \
   php5-fpm \
+  php5-redis
 "
 # To colour the bash use the following command:
 # echo -e "${COLOUR}foo\e[0m"
