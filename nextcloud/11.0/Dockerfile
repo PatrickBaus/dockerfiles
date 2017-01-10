@@ -7,7 +7,8 @@ ARG LIBICONV_VERSION=1.14
 # See https://nextcloud.com/security/ for the current key
 ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
-ENV GID=991 UID=991
+# Default GID=101, UID=100
+ENV GID=101 UID=100
 
 # Install packages
 
