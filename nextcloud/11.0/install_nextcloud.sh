@@ -46,7 +46,7 @@ cd ${temp_dir}
 tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /var/www/nextcloud
 echo -e "${COLOUR}Done.\e[0m"
 
-echo -ne "${COLOUR}Cleaning up...\e[0m"
+echo -e "${COLOUR}Cleaning up...\e[0m"
 apk del build-dependencies
 rm -rf /var/cache/apk/* ${temp_dir}
 echo -e "${COLOUR}Done.\e[0m"

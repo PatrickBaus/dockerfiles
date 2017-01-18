@@ -57,7 +57,7 @@ NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
 # echo -e "${COLOUR}foo\e[0m"
 COLOUR='\e[1;93m'
 
-echo -ne "${COLOUR}Installing PHP and extensions for Nextcloud...\e[0m"
+echo -e "${COLOUR}Installing PHP and extensions for Nextcloud...\e[0m"
 apk add -U ${NEXTCLOUD_DEPS}
 # Add symlink from php to php7, because it is not created by default, because PHP 7 is not the default in alpine
 #ln -s /usr/bin/php7 /usr/bin/php

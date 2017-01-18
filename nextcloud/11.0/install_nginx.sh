@@ -14,7 +14,7 @@ OLD_GID=101
 USER="nginx"
 USER_GROUP=${USER}
 
-echo -ne "${COLOUR}Installing Nginx...\e[0m"
+echo -e "${COLOUR}Installing Nginx...\e[0m"
 apk add -U nginx
 
 # Change user/group to UID and GID set in the Dockerfile
@@ -23,7 +23,7 @@ deluser nginx
 addgroup -g ${GID} ${USER_GROUP}
 adduser -D -S -u ${UID} -h /var/lib/nginx -s /sbin/nologin -g ${USER} -G ${USER_GROUP} ${USER}
 
-echo -e "${COLOUR}Changing owner and permissions for old uid/gid files...\e[0m"
+echo -ne "${COLOUR}Changing owner and permissions for old uid/gid files...\e[0m"
 find / -user ${OLD_UID} -exec chown ${USER} {} \;
 find / -group ${OLD_GID} -exec chgrp ${USER_GROUP} {} \;
 
