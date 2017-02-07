@@ -42,7 +42,7 @@ echo -e "${COLOUR}Done.\e[0m"
 # Create a temporary folder for the sources, which will later be removed
 temp_dir="$(mktemp -d)"
 cd ${temp_dir}
-echo -ne "${COLOUR}Downloading source for libbrotli...\e[0m"
+echo -e "${COLOUR}Downloading source for libbrotli...\e[0m"
 git clone https://github.com/bagder/libbrotli --depth=1
 echo -e "${COLOUR}Done.\e[0m"
 echo -ne "${COLOUR}Compiling libbrotli...\e[0m"
@@ -54,8 +54,12 @@ make install
 echo -e "${COLOUR}Done."
 
 cd ${temp_dir}
-echo -ne "${COLOUR}Downloading source for libbrotli nginx module...\e[0m"
+echo -e "${COLOUR}Downloading source for libbrotli nginx module...\e[0m"
 git clone https://github.com/google/ngx_brotli --depth=1
+echo -e "${COLOUR}Done.\e[0m"
+echo -ne "${COLOUR}Updating libbrotli nginx module...\e[0m"
+cd ngx_brotli
+git submodule update --init
 echo -e "${COLOUR}Done.\e[0m"
 
 cd ${temp_dir}
@@ -64,7 +68,7 @@ wget -q "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${LIBRESSL_TARBALL}"
 wget -q "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${LIBRESSL_TARBALL}.asc"
 echo -e "${COLOUR}Done.\e[0m"
 
-echo -ne "${COLOUR}Verifying authenticity of ${LIBRESSL_TARBALL}...\e[0m"
+echo -e "${COLOUR}Verifying authenticity of ${LIBRESSL_TARBALL}...\e[0m"
 export GNUPGHOME=${temp_dir}
 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_LIBRESSL}"
 gpg --batch --verify "${LIBRESSL_TARBALL}.asc" "${LIBRESSL_TARBALL}"
@@ -81,7 +85,7 @@ wget -q https://nginx.org/download/${NGINX_TARBALL}
 wget -q https://nginx.org/download/${NGINX_TARBALL}.asc
 echo -e "${COLOUR}Done.\e[0m"
 
-echo -ne "${COLOUR}Verifying authenticity of ${NGINX_TARBALL}...\e[0m"
+echo -e "${COLOUR}Verifying authenticity of ${NGINX_TARBALL}...\e[0m"
 export GNUPGHOME=${temp_dir}
 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_NGINX}"
 gpg --verify "${NGINX_TARBALL}.asc"
@@ -92,7 +96,7 @@ echo -ne "${COLOUR}Unpacking source...\e[0m"
 tar -xzf "${NGINX_TARBALL}"
 echo -e "${COLOUR}Done.\e[0m"
 
-echo -ne "${COLOUR}Configuring and making...\e[0m"
+echo -e "${COLOUR}Configuring and making...\e[0m"
 cd nginx-${NGINX_VERSION}
 ./configure \
   --prefix=/etc/nginx \
