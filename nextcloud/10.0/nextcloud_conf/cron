@@ -1,3 +1,0 @@
-#!/bin/sh
-# We need to pass a shell, because the user does not have one
-su-exec nginx php -f /var/www/nextcloud/cron.php > /dev/null 2>&1
