@@ -11,6 +11,7 @@ NEXTCLOUD_DEPS="\
   php7 \
   php7-ctype \
   php7-dom \
+  php7-fileinfo \
   php7-gd \
   php7-iconv \
   php7-json \

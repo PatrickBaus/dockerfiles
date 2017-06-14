@@ -10,6 +10,9 @@ ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 # Default GID=101, UID=100
 ENV GID=101 UID=100
 
+# Upgrade installed packages
+RUN apk --no-cache upgrade
+
 # Install packages
 
 #############
