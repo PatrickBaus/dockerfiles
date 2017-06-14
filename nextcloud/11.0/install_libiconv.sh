@@ -19,7 +19,7 @@ nproc=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)
 LIBICONV_TARBALL="libiconv-${LIBICONV_VERSION}.tar.gz"
 
 # The key that was used to sign the libiconv source
-GPG_KEY="1736 90D4 963E 5FC4 6917  7FA7 C71A 4C65 F059 B1D1"
+GPG_KEY="68D9 4D8A AEEA D48A E7DC  5B90 4F49 4A94 2E46 16C2"
 
 # download source to a temporary folder, which will later be removed
 temp_dir="$(mktemp -d)"
@@ -32,7 +32,10 @@ echo -e "${COLOUR}Done.\e[0m"
 # Verify the download
 echo -ne "${COLOUR}Verifying authenticity of ${LIBICONV_TARBALL}...\e[0m"
 export GNUPGHOME=${temp_dir}
-gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}"
+# Use multiple keyservers, because sometimes the pool does not respond
+gpg --keyserver pgp.mit.edu --recv-keys "${GPG_KEY}" || \
+    gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" || \
+    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}";
 gpg --verify "${temp_dir}/${LIBICONV_TARBALL}.sig"
 unset GNUPGHOME
 echo -e "${COLOUR}Done.\e[0m"
