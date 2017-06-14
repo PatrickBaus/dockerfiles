@@ -20,7 +20,9 @@ NEXTCLOUD_DEPS="\
   php7-zlib \
   php7-xml \
   php7-xmlreader \
-  php7-session
+  php7-xmlwriter \
+  php7-session \
+  php7-simplexml
 "
 
 # Optional dependencies for the nextcloud occ script

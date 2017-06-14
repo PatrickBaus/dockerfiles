@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.6
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
 ARG NEXTCLOUD_VERSION=11.0.3
