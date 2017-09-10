@@ -129,8 +129,7 @@ COPY server.key /etc/nginx/certs/
 #############
 # Uncomment this to enable a terminal for nano
 ENV TERM xterm
-RUN apk -U add nano
-RUN rm -rf /var/cache/apk/*
+RUN apk --no-cache add nano
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
