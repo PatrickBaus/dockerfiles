@@ -58,6 +58,7 @@ cd ${temp_dir}/libiconv/
 ./configure --prefix=/usr/local
 make -j${nproc}
 make install
+libtool --finish /usr/local/lib
 echo -e "${COLOUR}Done.\e[0m"
 
 # Clean up
