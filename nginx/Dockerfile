@@ -84,6 +84,7 @@ RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} &&
   --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
   --with-openssl="${TEMP_DIR}/libressl-${LIBRESSL_VERSION}" \
   --with-http_ssl_module \
+  --with-http_sub_module \
   --with-http_v2_module \
   --with-http_gzip_static_module \
   --with-http_stub_status_module \
