@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.6
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
 ARG NGINX_VERSION=1.13.5
