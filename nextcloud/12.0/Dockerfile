@@ -1,7 +1,7 @@
 FROM alpine:3.6
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-ARG NEXTCLOUD_VERSION=12.0.2
+ARG NEXTCLOUD_VERSION=12.0.3
 ARG LIBICONV_VERSION=1.15
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
@@ -92,8 +92,7 @@ RUN rm -rf /var/cache/apk/*
 #############
 # Uncomment this to enable a terminal for nano
 ENV TERM xterm
-RUN apk -U add nano
-RUN rm -rf /var/cache/apk/*
+RUN apk --no-cache add nano
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
