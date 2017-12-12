@@ -1,7 +1,7 @@
-FROM alpine:3.6
+FROM alpine:3.7
 MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
 
-ARG NEXTCLOUD_VERSION=12.0.3
+ARG NEXTCLOUD_VERSION=12.0.4
 ARG LIBICONV_VERSION=1.15
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
@@ -38,6 +38,7 @@ RUN /install_php.sh
 # Do not touch these files unless you know what you doing
 COPY php-fpm_conf/php-fpm.conf /etc/php7/
 COPY php-fpm_conf/www.conf /etc/php7/php-fpm.d/
+COPY php_conf/ /etc/php7/conf.d/
 
 #############
 # Nginx     #
