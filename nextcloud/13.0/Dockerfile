@@ -1,5 +1,5 @@
 FROM alpine:3.7
-MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
+LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NEXTCLOUD_VERSION=13.0.2
 ARG LIBICONV_VERSION=1.15
