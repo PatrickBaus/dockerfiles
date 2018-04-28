@@ -1,5 +1,5 @@
 FROM alpine:3.7
-MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
+LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NGINX_VERSION=1.13.12
 ARG LIBRESSL_VERSION=2.7.2
