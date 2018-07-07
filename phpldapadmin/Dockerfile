@@ -1,13 +1,15 @@
 FROM nginx:alpine
 
-MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
+LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
+
+# Upgrade installed packages
+RUN apk --no-cache upgrade
 
 # Install php and phpldapadmin
-RUN apk -U add \
+RUN apk --no-cache add \
   php-fpm \
   phpldapadmin \
   supervisor
-RUN rm -rf /var/cache/apk/*
 
 # Copy the default nginx config to the image
 # Do not touch this file unless you know what you doing
