@@ -1,13 +1,15 @@
 FROM alpine
 
-MAINTAINER Patrick Baus <patrick.baus@physik.tu-darmstadt.de>
+LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
+
+# Upgrade installed packages
+RUN apk --no-cache upgrade
 
 # Install openldap
-RUN apk -U add \
+RUN apk --no-cache add \
   openldap \
   openldap-clients \
   su-exec
-RUN rm -rf /var/cache/apk/*
 
 # Copy the default slapd config to the image
 # Do not touch this file unless you know what you doing
