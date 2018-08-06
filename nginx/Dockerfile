@@ -1,7 +1,7 @@
 FROM alpine:3.8
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NGINX_VERSION=1.15.1
+ARG NGINX_VERSION=1.15.2
 ARG LIBRESSL_VERSION=2.7.4
 ARG GPG_LIBRESSL="A1EB 079B 8D3E B92B 4EBD  3139 663A F51B D5E4 D8D5"
 ARG GPG_NGINX="B0F4 2533 73F8 F6F5 10D4  2178 520A 9993 A1C0 52F8"
@@ -122,8 +122,8 @@ COPY nginx_conf/headers_params /etc/nginx/conf/headers_params
 COPY nginx_conf/proxy_params /etc/nginx/conf/proxy_params
 
 # Copy certificates to the image
-COPY server.crt /etc/nginx/certs/
-COPY server.key /etc/nginx/certs/
+#COPY server.crt /etc/nginx/certs/
+#COPY server.key /etc/nginx/certs/
 
 #############
 # Debug     #
