@@ -1,7 +1,7 @@
 FROM alpine:3.8
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NEXTCLOUD_VERSION=13.0.5
+ARG NEXTCLOUD_VERSION=13.0.6
 ARG LIBICONV_VERSION=1.15
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
