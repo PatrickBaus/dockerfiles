@@ -71,6 +71,8 @@ createInitialDatabase() {
 
   addSchemas
 
+  # Create the LDAP_RUNDIR, so that we can use ldapi://
+  mkdir /var/lib/openldap/run/
   chown -R "${LDAP_USER}:${LDAP_GROUP}" /var/lib/openldap/openldap-data
   chown -R "${LDAP_USER}:${LDAP_GROUP}" /etc/openldap/slapd.conf
 

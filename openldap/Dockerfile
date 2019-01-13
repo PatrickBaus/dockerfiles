@@ -9,6 +9,10 @@ RUN apk --no-cache upgrade
 RUN apk --no-cache add \
   openldap \
   openldap-clients \
+  openldap-overlay-memberof \
+  openldap-overlay-refint \
+  openldap-overlay-ppolicy \
+  openldap-back-mdb \
   su-exec
 
 # Copy the default slapd config to the image
