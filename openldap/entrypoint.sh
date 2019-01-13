@@ -145,7 +145,7 @@ addModules() {
 }
 
 # Create the LDAP_RUNDIR, so that we can use ldapi://
-mkdir /var/lib/openldap/run/
+mkdir -p /var/lib/openldap/run/
 
 # Run this on first start
 if [ ! -f '/etc/openldap/slapd.d/INIT_DONE' ]; then
