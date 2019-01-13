@@ -71,8 +71,6 @@ createInitialDatabase() {
 
   addSchemas
 
-  # Create the LDAP_RUNDIR, so that we can use ldapi://
-  mkdir /var/lib/openldap/run/
   chown -R "${LDAP_USER}:${LDAP_GROUP}" /var/lib/openldap/openldap-data
   chown -R "${LDAP_USER}:${LDAP_GROUP}" /etc/openldap/slapd.conf
 
@@ -146,6 +144,9 @@ addModules() {
   fi
 }
 
+# Create the LDAP_RUNDIR, so that we can use ldapi://
+mkdir /var/lib/openldap/run/
+
 # Run this on first start
 if [ ! -f '/etc/openldap/slapd.d/INIT_DONE' ]; then
   echo -e "${COLOUR}ERR Cannot find OpenLDAP configuration. Starting setup...\e[0m"
@@ -211,5 +212,9 @@ else
     echo -e "${COLOUR}WARN Container already configured, for security reasons remove the SLAPD_* environment variables\e[0m"
   fi
 fi
+
+#while :; do
+#  sleep 1
+#done
 
 exec "$@"
