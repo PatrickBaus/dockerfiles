@@ -54,7 +54,8 @@ NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
 NEXTCLOUD_DEPS="${NEXTCLOUD_DEPS} \
   php7-apcu \
   php7-opcache \
-  php7-fpm
+  php7-fpm \
+  php7-imagick
 "
 # To colour the bash use the following command:
 # echo -e "${COLOUR}foo\e[0m"
