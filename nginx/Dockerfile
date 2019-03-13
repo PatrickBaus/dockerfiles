@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.9
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NGINX_VERSION=1.15.9
@@ -67,8 +67,8 @@ RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} &&
   gpg --batch --verify "${LIBRESSL_TARBALL}.asc" "${LIBRESSL_TARBALL}" && \
   unset GNUPGHOME && \
   tar -xzf "${LIBRESSL_TARBALL}" && \
-  wget -q https://nginx.org/download/${NGINX_TARBALL} && \
-  wget -q https://nginx.org/download/${NGINX_TARBALL}.asc && \
+  wget -q "https://nginx.org/download/${NGINX_TARBALL}" && \
+  wget "https://nginx.org/download/${NGINX_TARBALL}.asc" && \
   gpg --keyserver pgp.mit.edu --recv-keys "${GPG_NGINX}" || \
   gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_NGINX}" || \
   gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_NGINX}" && \
@@ -122,8 +122,8 @@ COPY nginx_conf/headers_params /etc/nginx/conf/headers_params
 COPY nginx_conf/proxy_params /etc/nginx/conf/proxy_params
 
 # Copy certificates to the image
-#COPY server.crt /etc/nginx/certs/
-#COPY server.key /etc/nginx/certs/
+COPY server.crt /etc/nginx/certs/
+COPY server.key /etc/nginx/certs/
 
 #############
 # Debug     #
