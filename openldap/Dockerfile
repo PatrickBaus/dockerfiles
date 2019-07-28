@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.10
 
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
