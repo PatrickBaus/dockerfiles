@@ -21,11 +21,11 @@ RUN apk --no-cache upgrade
 # Wating for https://bugs.alpinelinux.org/issues/5025 to be closed
 # This install script will "monkey patch" the iconv library, so that
 # libiconv will be called instead of the musl implemenatition.
-COPY install_libiconv.sh /
-RUN chmod +x /install_libiconv.sh
-RUN /install_libiconv.sh
+#COPY install_libiconv.sh /
+#RUN chmod +x /install_libiconv.sh
+#RUN /install_libiconv.sh
 # "Monkey patch" the existing libiconv implementation
-ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
+#ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
 
 #############
 # PHP       #

@@ -8,6 +8,7 @@ set -euo pipefail
 # For a list of required modules see:
 # https://docs.nextcloud.com/server/11/admin_manual/installation/source_installation.html
 NEXTCLOUD_DEPS="\
+  gnu-libiconv \
   php7 \
   php7-ctype \
   php7-dom \

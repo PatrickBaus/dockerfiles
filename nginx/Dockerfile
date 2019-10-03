@@ -122,8 +122,8 @@ COPY nginx_conf/headers_params /etc/nginx/conf/headers_params
 COPY nginx_conf/proxy_params /etc/nginx/conf/proxy_params
 
 # Copy certificates to the image
-#COPY server.crt /etc/nginx/certs/
-#COPY server.key /etc/nginx/certs/
+COPY server.crt /etc/nginx/certs/
+COPY server.key /etc/nginx/certs/
 
 #############
 # Debug     #
