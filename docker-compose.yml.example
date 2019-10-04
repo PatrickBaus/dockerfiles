@@ -77,7 +77,7 @@ services:
     #  - './.docker-openldap.env'
 
   nextcloud:
-    build: ./nextcloud/16.0
+    build: ./nextcloud/17.0
     restart: "always"
     container_name: nextcloud
     environment:
