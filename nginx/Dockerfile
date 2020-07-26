@@ -1,7 +1,7 @@
 FROM alpine:3.12
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NGINX_VERSION=1.19.0
+ARG NGINX_VERSION=1.19.1
 ARG LIBRESSL_VERSION=3.2.0
 ARG GPG_LIBRESSL="A1EB 079B 8D3E B92B 4EBD  3139 663A F51B D5E4 D8D5"
 ARG GPG_NGINX="B0F4 2533 73F8 F6F5 10D4  2178 520A 9993 A1C0 52F8"
@@ -91,6 +91,7 @@ RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} &&
   --with-file-aio \
   --with-threads \
   --with-pcre-jit \
+  --with-openssl-opt='enable-tls1_3' \
   --without-http_ssi_module \
   --without-http_scgi_module \
   --without-http_uwsgi_module \
@@ -145,4 +146,6 @@ LABEL description="nginx built from source." \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD /usr/sbin/nginx
+#CMD /usr/sbin/nginx
+CMD while true; do sleep 6h; nginx -s reload; done & exec nginx
+#CMD /bin/sh -c 'while :; do sleep 6h & wait $${!}; /usr/sbin/nginx -s reload; done & /usr/sbin/nginx'
