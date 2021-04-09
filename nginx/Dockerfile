@@ -140,5 +140,5 @@ LABEL description="nginx built from source." \
 ENTRYPOINT ["/entrypoint.sh"]
 
 #CMD /usr/sbin/nginx
-CMD while true; do sleep 6h & wait $${!}; nginx -s reload; done & exec nginx
+CMD while true; do sleep 6h; nginx -s reload; done & exec nginx
 #CMD /bin/sh -c 'while :; do sleep 6h & wait $${!}; /usr/sbin/nginx -s reload; done & /usr/sbin/nginx'
