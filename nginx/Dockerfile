@@ -2,7 +2,7 @@ FROM alpine:3.13
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NGINX_VERSION=1.19.10
-ARG LIBRESSL_VERSION=3.3.2
+ARG LIBRESSL_VERSION=3.3.3
 ARG BUILD_CORES
 
 # Upgrade installed packages
@@ -77,7 +77,7 @@ RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} &&
   --sbin-path=/usr/sbin/nginx \
   --user=nginx \
   --group=nginx \
-  --with-cc-opt='-O3 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wno-deprecated-declarations' \
+  --with-cc-opt='-O3 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wno-deprecated-declarations -DTLS1_3_VERSION=0x0304' \
   --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
   --with-openssl="${TEMP_DIR}/libressl-${LIBRESSL_VERSION}" \
   --with-http_ssl_module \
