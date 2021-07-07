@@ -36,10 +36,7 @@ echo -e "${COLOUR}Done.\e[0m"
 
 echo -e "${COLOUR}Verifying authenticity of ${NEXTCLOUD_TARBALL}...\e[0m"
 export GNUPGHOME=${temp_dir}
-# Use multiple keyservers, because sometimes the pool does not respond
-gpg --keyserver pgp.mit.edu --recv-keys "${GPG_NEXTCLOUD}" || \
-    gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_NEXTCLOUD}" || \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_NEXTCLOUD}";
+gpg --import /nextcloud_signing_key.asc && \
 gpg --batch --verify "${NEXTCLOUD_TARBALL}.asc" "${NEXTCLOUD_TARBALL}"
 unset GNUPGHOME
 echo -e "${COLOUR}Done.\e[0m"

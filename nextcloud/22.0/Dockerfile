@@ -1,7 +1,7 @@
-FROM alpine:3.13
+FROM alpine:3.14
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NEXTCLOUD_VERSION=21.0.2
+ARG NEXTCLOUD_VERSION=22.0.0
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -42,18 +42,18 @@ COPY php_conf/ /etc/php7/conf.d/
 #############
 # Nginx     #
 #############
-COPY install_nginx.sh /
+COPY install_nginx.sh nextcloud_signing_key.asc /
 RUN chmod +x /install_nginx.sh
 RUN /install_nginx.sh
 
 # Copy the default nginx config to the image
 # Do not touch these files unless you know what you doing
-COPY nginx_conf/php-fpm.conf /etc/nginx/conf.d/
+COPY nginx_conf/php-fpm.conf /etc/nginx/http.d/
 COPY nginx_conf/nginx.conf /etc/nginx/
 # Install the nginx configuration
-COPY nginx_conf/nextcloud.conf /etc/nginx/conf.d/
+COPY nginx_conf/nextcloud.conf /etc/nginx/http.d/
 RUN chown -R nginx:nginx /var/log/nginx
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/http.d/default.conf
 
 #############
 # Nextcloud #
