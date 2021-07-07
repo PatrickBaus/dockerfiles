@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.14
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 COPY entrypoint.sh /
