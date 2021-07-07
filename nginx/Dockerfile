@@ -39,8 +39,7 @@ RUN apk --no-cache add --virtual=build-dependencies \
 RUN addgroup -S nginx && \
  adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx
 
-COPY libressl_signing_key.txt /
-COPY nginx_signing_key.txt /
+COPY libressl_signing_key.txt nginx_signing_key.txt /
 
 # Install libbrotli
 RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} && \
