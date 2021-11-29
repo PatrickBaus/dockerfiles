@@ -13,31 +13,53 @@ ENV GID=101 UID=100
 RUN apk --no-cache upgrade
 
 # Install packages
-
-#############
-# Libiconv  #
-#############
-# Wating for https://bugs.alpinelinux.org/issues/5025 to be closed
-# This install script will "monkey patch" the iconv library, so that
-# libiconv will be called instead of the musl implemenatition.
-#COPY install_libiconv.sh /
-#RUN chmod +x /install_libiconv.sh
-#RUN /install_libiconv.sh
-# "Monkey patch" the existing libiconv implementation
-#ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
-
 #############
 # PHP       #
 #############
-COPY install_php.sh /
-RUN chmod +x /install_php.sh
-RUN /install_php.sh
+RUN apk --no-cache add gnu-libiconv \
+  php8 \
+  php8-bcmath \
+  php8-ctype \
+  php8-dom \
+  php8-fileinfo \
+  php8-gd \
+  php8-gmp \
+  php8-iconv \
+  php8-json \
+  php8-mbstring \
+  php8-posix \
+  php8-zip \
+  php8-zlib \
+  php8-xml \
+  php8-xmlreader \
+  php8-xmlwriter \
+  php8-session \
+  php8-simplexml \
+  php8-pcntl \
+  php8-pdo_mysql \
+  php8-curl \
+  php8-bz2 \
+  php8-intl \
+  php8-pecl-mcrypt \
+  openssl \
+  ca-certificates \
+  php8-openssl \
+  php8-ldap \
+  php8-exif \
+  php8-apcu \
+  php8-opcache \
+  php8-fpm \
+  php8-pecl-imagick
+
+#COPY install_php.sh /
+#RUN chmod +x /install_php.sh
+#RUN /install_php.sh
 
 # Copy the default php and php-fpm config to the image
 # Do not touch these files unless you know what you doing
-COPY php-fpm_conf/php-fpm.conf /etc/php7/
-COPY php-fpm_conf/www.conf /etc/php7/php-fpm.d/
-COPY php_conf/ /etc/php7/conf.d/
+COPY php-fpm_conf/php-fpm.conf /etc/php8/
+COPY php-fpm_conf/www.conf /etc/php8/php-fpm.d/
+COPY php_conf/ /etc/php8/conf.d/
 
 #############
 # Nginx     #
