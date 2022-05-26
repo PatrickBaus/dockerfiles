@@ -2,7 +2,7 @@ FROM alpine:3.15
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NGINX_VERSION=1.21.6
-ARG LIBRESSL_VERSION=3.5.1
+ARG LIBRESSL_VERSION=3.5.3
 ARG BUILD_CORES
 
 # Upgrade installed packages
