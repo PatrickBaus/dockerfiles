@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3.16
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NGINX_VERSION=1.21.6
@@ -47,14 +47,7 @@ RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} &&
   LIBRESSL_TARBALL="libressl-${LIBRESSL_VERSION}.tar.gz" && \
   NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz" && \
   cd ${TEMP_DIR} && \
-  git clone https://github.com/bagder/libbrotli --depth=1 && \
-  cd libbrotli && \
-  ./autogen.sh && \
-  ./configure && \
-  make -j${NPROC} && \
-  make install && \
-  cd ${TEMP_DIR} && \
-  git clone https://github.com/google/ngx_brotli --depth=1 && \
+  git clone https://github.com/google/ngx_brotli.git --depth=1 && \
   cd ngx_brotli && \
   git submodule update --init && \
   cd ${TEMP_DIR} && \
