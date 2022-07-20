@@ -1,7 +1,7 @@
 FROM alpine:3.16
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NEXTCLOUD_VERSION=24.0.1
+ARG NEXTCLOUD_VERSION=24.0.3
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
