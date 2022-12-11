@@ -1,7 +1,7 @@
-FROM alpine:3.16
+FROM alpine:3.17
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NEXTCLOUD_VERSION=25.0.1
+ARG NEXTCLOUD_VERSION=25.0.2
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -17,39 +17,39 @@ RUN apk --no-cache upgrade
 # PHP       #
 #############
 RUN apk --no-cache add gnu-libiconv \
-  php8 \
-  php8-bcmath \
-  php8-ctype \
-  php8-dom \
-  php8-fileinfo \
-  php8-gd \
-  php8-gmp \
-  php8-iconv \
-  php8-json \
-  php8-mbstring \
-  php8-posix \
-  php8-zip \
-  php8-zlib \
-  php8-xml \
-  php8-xmlreader \
-  php8-xmlwriter \
-  php8-session \
-  php8-simplexml \
-  php8-pcntl \
-  php8-pdo_mysql \
-  php8-curl \
-  php8-bz2 \
-  php8-intl \
-  php8-pecl-mcrypt \
+  php81 \
+  php81-bcmath \
+  php81-ctype \
+  php81-curl \
+  php81-dom \
+  php81-fileinfo \
+  php81-gd \
+  php81-gmp \
+  php81-iconv \
+  php81-intl \
+  php81-json \
+  php81-mbstring \
+  php81-opcache \
+  php81-openssl \
+  php81-pcntl \
+  php81-posix \
+  php81-session \
+  php81-simplexml \
+  php81-xml \
+  php81-xmlreader \
+  php81-xmlwriter \
+  php81-zip \
+  php81-zlib \
+  php81-pdo_mysql \
+  php81-bz2 \
+#  php81-pecl-mcrypt \
   openssl \
   ca-certificates \
-  php8-openssl \
-  php8-ldap \
-  php8-exif \
-  php8-apcu \
-  php8-opcache \
-  php8-fpm \
-  php8-pecl-imagick
+  php81-ldap \
+  php81-exif \
+  php81-apcu \
+  php81-fpm \
+  php81-pecl-imagick
 
 #COPY install_php.sh /
 #RUN chmod +x /install_php.sh
@@ -57,9 +57,9 @@ RUN apk --no-cache add gnu-libiconv \
 
 # Copy the default php and php-fpm config to the image
 # Do not touch these files unless you know what you doing
-COPY php-fpm_conf/php-fpm.conf /etc/php8/
-COPY php-fpm_conf/www.conf /etc/php8/php-fpm.d/
-COPY php_conf/ /etc/php8/conf.d/
+COPY php-fpm_conf/php-fpm.conf /etc/php81/
+COPY php-fpm_conf/www.conf /etc/php81/php-fpm.d/
+COPY php_conf/ /etc/php81/conf.d/
 
 #############
 # Nginx     #
