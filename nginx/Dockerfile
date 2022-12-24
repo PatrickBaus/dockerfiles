@@ -1,7 +1,7 @@
 FROM alpine:3.17
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NGINX_VERSION=1.23.2
+ARG NGINX_VERSION=1.23.3
 ARG LIBRESSL_VERSION=3.6.1
 ARG BUILD_CORES
 
@@ -115,8 +115,8 @@ COPY nginx_conf/proxy_params /etc/nginx/conf/proxy_params
 # Debug     #
 #############
 # Uncomment this to enable a terminal for nano
-ENV TERM xterm
-RUN apk --no-cache add nano
+#ENV TERM xterm
+#RUN apk --no-cache add nano
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
