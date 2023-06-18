@@ -1,7 +1,7 @@
 FROM alpine:3.18
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
-ARG NGINX_VERSION=1.23.4
+ARG NGINX_VERSION=1.25.1
 ARG LIBRESSL_VERSION=3.8.0
 ARG BUILD_CORES
 
