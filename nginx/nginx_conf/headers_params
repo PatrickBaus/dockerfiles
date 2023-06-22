@@ -4,3 +4,4 @@ add_header X-XSS-Protection "1; mode=block";
 add_header X-Permitted-Cross-Domain-Policies none;
 add_header Referrer-Policy "no-referrer" always;
 add_header X-Robots-Tag "noindex, nofollow" always;
+add_header Alt-Svc 'h3=":443"; ma=86400, h3-29=":443"; ma=2592000';
