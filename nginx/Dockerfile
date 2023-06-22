@@ -97,6 +97,7 @@ RUN NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} &&
   make -j${NPROC} && \
   make install && \
   rm -rf ${TEMP_DIR} && \
+  rm /etc/nginx/html/index.html && \
   ln -sf /proc/1/fd/1 /var/log/nginx/access.log && \
   ln -sf /proc/1/fd/2 /var/log/nginx/error.log && \
   mkdir -p /run/nginx && \
