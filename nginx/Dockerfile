@@ -14,8 +14,6 @@ RUN apk --no-cache upgrade \
   && apk --no-cache add --virtual=base-dependencies \
     build-base \
     cmake \
-#    automake \
-#    autoconf \
     ca-certificates \
     git \
     gnupg
