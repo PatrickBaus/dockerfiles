@@ -1,6 +1,6 @@
 ARG ALPINE_VERSION=3.18
 ARG NGINX_VERSION=1.25.2
-ARG LIBRESSL_VERSION=3.8.0
+ARG LIBRESSL_VERSION=3.8.1
 ARG BUILD_CORES
 
 FROM alpine:$ALPINE_VERSION as builder
@@ -13,8 +13,9 @@ ARG BUILD_CORES
 RUN apk --no-cache upgrade \
   && apk --no-cache add --virtual=base-dependencies \
     build-base \
-    automake \
-    autoconf \
+    cmake \
+#    automake \
+#    autoconf \
     ca-certificates \
     git \
     gnupg
@@ -41,17 +42,20 @@ RUN \
     --disable-tests \
     --enable-shared=yes \
     --enable-static=no \
-  && make -j$(NPROC) install_sw \
+  && make -j${NPROC} install_sw \
   && find /opt/libressl/lib -name '*.so.*' -exec cp -P {} /usr/lib \;
 
 # Install libbrotli
 RUN \
   set -ex \
+  && NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} \
   && mkdir -p /usr/src/ \
   && cd /usr/src/ \
-  && git clone https://github.com/google/ngx_brotli.git --depth=1 \
-  && cd ngx_brotli \
-  && git submodule update --init
+  && git clone --recurse-submodules -j${NPROC} https://github.com/google/ngx_brotli.git \
+  && cd ngx_brotli/deps/brotli \
+  && mkdir out && cd out \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-Ofast -m64 -march=native -mtune=native -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_CXX_FLAGS="-Ofast -m64 -march=native -mtune=native -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_INSTALL_PREFIX=./installed .. \
+  && cmake --build . --config Release --target brotlienc
 
 RUN \
   set -ex \
@@ -59,6 +63,7 @@ RUN \
     linux-headers \
     pcre-dev \
     zlib-dev \
+  && NPROC=${BUILD_CORES-$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)} \
   && NGINX_TARBALL="nginx-${NGINX_VERSION}.tar.gz" \
   && TEMP_DIR="$(mktemp -d)" \
   && cd ${TEMP_DIR} \
@@ -75,8 +80,8 @@ RUN \
     --sbin-path=/usr/sbin/nginx \
     --user=nginx \
     --group=nginx \
-    --with-cc-opt='-O3 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wno-deprecated-declarations' \
-    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
+    --with-cc-opt='-m64 -march=native -mtune=native -Ofast -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections' \
+    --with-ld-opt='-m64 -Wl,-s -Wl,-Bsymbolic -Wl,--gc-sections' \
     --with-cc-opt="-I/opt/libressl/include" \
     --with-ld-opt="-L/opt/libressl/lib" \
     --with-http_ssl_module \
@@ -101,7 +106,7 @@ RUN \
     --http-log-path=/var/log/nginx/access.log \
     --error-log-path=/var/log/nginx/error.log \
     --add-module="/usr/src/ngx_brotli" \
-  && make -j$(NPROC) \
+  && make -j${NPROC} \
   && make install
 
 FROM alpine:$ALPINE_VERSION
