@@ -24,7 +24,7 @@ RUN \
   gpg --batch --verify "${NEXTCLOUD_TARBALL}.asc" "${NEXTCLOUD_TARBALL}" && \
   echo -ne "Unpacking source...\e[0m" && \
   mkdir /app && \
-  tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app && \
+  tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app
 
 FROM alpine:3.18
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
