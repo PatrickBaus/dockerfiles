@@ -8,7 +8,7 @@ set -euo pipefail
 # To colour the bash use the following command:
 # echo -e "${COLOUR}foo\e[0m"
 COLOUR='\e[1;93m'
-# THe ids used by nginx, this will be replaced by the ones set in the Dockerfile
+# The ids used by nginx, these will be replaced by the ones set in the Dockerfile
 OLD_UID=101
 OLD_GID=101
 USER="nginx"

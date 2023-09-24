@@ -1,10 +1,41 @@
-FROM alpine:3.18
-LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
-
+FROM alpine:3.18 as nextcloud-builder
 ARG NEXTCLOUD_VERSION=27.1.1
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
-ENV GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
+ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
+
+COPY nextcloud_signing_key.asc /
+
+RUN COLOUR='\e[1;93m' && \
+  echo -e "${COLOUR}Installing build dependencies...\e[0m" && \
+  apk --no-cache add \
+  gnupg \
+  tar
+
+RUN \
+  echo -e "${COLOUR}Done.\e[0m" && \
+  temp_dir="$(mktemp -d)" && \
+  cd ${temp_dir} && \
+  NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" && \
+  echo -ne "${COLOUR}Downloading source...\e[0m" && \
+  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} && \
+  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 && \
+  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc && \
+  echo -e "${COLOUR}Done.\e[0m" && \
+  echo -ne "${COLOUR}Verifying integrity of ${NEXTCLOUD_TARBALL}...\e[0m" && \
+  if [ $(echo -n $(sha256sum -c "${NEXTCLOUD_TARBALL}.sha256") | tail -c 2) != "OK" ]; then echo -e "${COLOUR}Warning! Checksum does not match!" && exit 1; fi && \
+  echo -e "${COLOUR}Done.\e[0m" && \
+  echo -e "${COLOUR}Verifying authenticity of ${NEXTCLOUD_TARBALL}...\e[0m" && \
+  gpg --import /nextcloud_signing_key.asc && \
+  gpg --batch --verify "${NEXTCLOUD_TARBALL}.asc" "${NEXTCLOUD_TARBALL}" && \
+  echo -e "${COLOUR}Done.\e[0m" && \
+  echo -ne "${COLOUR}Unpacking source...\e[0m" && \
+  mkdir -p /app && \
+  tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app && \
+  echo -e "${COLOUR}Done.\e[0m"
+
+FROM alpine:3.18
+LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 # Default GID=101, UID=100
 ENV GID=101 UID=100
@@ -61,7 +92,7 @@ COPY php_conf/ /etc/php81/conf.d/
 #############
 # Nginx     #
 #############
-COPY install_nginx.sh nextcloud_signing_key.asc /
+COPY install_nginx.sh /
 RUN chmod +x /install_nginx.sh
 RUN /install_nginx.sh
 
@@ -77,11 +108,9 @@ RUN rm /etc/nginx/http.d/default.conf
 #############
 # Nextcloud #
 #############
-COPY install_nextcloud.sh /
+COPY --from=nextcloud-builder /app /var/www/nextcloud/
 COPY upgrade_nextcloud.sh /
-RUN chmod +x /install_nextcloud.sh
 RUN chmod +x /upgrade_nextcloud.sh
-RUN /install_nextcloud.sh
 
 # Copy the default Nextcloud config to the image
 # Do not touch these files unless you know what you doing
@@ -99,19 +128,11 @@ RUN /etc/periodic/15min/nextcloud
 #############
 # Supervisor#
 #############
-RUN apk -U add supervisor
+RUN apk --no-cache add supervisor
 
 # Copy the default supervisor config to the image
 # Do not touch this file unless you know what you doing
 COPY supervisor_conf/default.ini /etc/supervisor.d/
-RUN rm -rf /var/cache/apk/*
-
-#############
-# Debug     #
-#############
-# Uncomment this to enable a terminal for nano
-ENV TERM xterm
-RUN apk --no-cache add nano
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
