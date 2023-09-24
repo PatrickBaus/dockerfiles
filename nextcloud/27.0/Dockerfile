@@ -6,33 +6,25 @@ ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
 COPY nextcloud_signing_key.asc /
 
-RUN COLOUR='\e[1;93m' && \
-  echo -e "${COLOUR}Installing build dependencies...\e[0m" && \
+RUN \
   apk --no-cache add \
   gnupg \
   tar
 
 RUN \
-  echo -e "${COLOUR}Done.\e[0m" && \
   temp_dir="$(mktemp -d)" && \
   cd ${temp_dir} && \
   NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" && \
-  echo -ne "${COLOUR}Downloading source...\e[0m" && \
+  echo -ne "Downloading source...\e[0m" && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc && \
-  echo -e "${COLOUR}Done.\e[0m" && \
-  echo -ne "${COLOUR}Verifying integrity of ${NEXTCLOUD_TARBALL}...\e[0m" && \
-  if [ $(echo -n $(sha256sum -c "${NEXTCLOUD_TARBALL}.sha256") | tail -c 2) != "OK" ]; then echo -e "${COLOUR}Warning! Checksum does not match!" && exit 1; fi && \
-  echo -e "${COLOUR}Done.\e[0m" && \
-  echo -e "${COLOUR}Verifying authenticity of ${NEXTCLOUD_TARBALL}...\e[0m" && \
+  if [ $(echo -n $(sha256sum -c "${NEXTCLOUD_TARBALL}.sha256") | tail -c 2) != "OK" ]; then echo -e "Error! Tarball checksum does not match!" && exit 1; fi && \
   gpg --import /nextcloud_signing_key.asc && \
   gpg --batch --verify "${NEXTCLOUD_TARBALL}.asc" "${NEXTCLOUD_TARBALL}" && \
-  echo -e "${COLOUR}Done.\e[0m" && \
-  echo -ne "${COLOUR}Unpacking source...\e[0m" && \
-  mkdir -p /app && \
+  echo -ne "Unpacking source...\e[0m" && \
+  mkdir /app && \
   tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app && \
-  echo -e "${COLOUR}Done.\e[0m"
 
 FROM alpine:3.18
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
