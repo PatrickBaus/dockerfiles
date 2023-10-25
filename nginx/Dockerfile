@@ -51,7 +51,7 @@ RUN \
   && git clone --recurse-submodules -j${NPROC} https://github.com/google/ngx_brotli.git \
   && cd ngx_brotli/deps/brotli \
   && mkdir out && cd out \
-  && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-Ofast -m64 -march=native -mtune=native -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_CXX_FLAGS="-Ofast -m64 -march=native -mtune=native -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_INSTALL_PREFIX=./installed .. \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-Ofast -m64 -march=native -mtune=native -flto=auto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_CXX_FLAGS="-Ofast -m64 -march=native -mtune=native -flto=auto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_INSTALL_PREFIX=./installed .. \
   && cmake --build . --config Release --target brotlienc
 
 RUN \
@@ -77,7 +77,7 @@ RUN \
     --sbin-path=/usr/sbin/nginx \
     --user=nginx \
     --group=nginx \
-    --with-cc-opt='-m64 -march=native -mtune=native -Ofast -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections' \
+    --with-cc-opt='-m64 -march=native -mtune=native -Ofast -flto=auto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections' \
     --with-ld-opt='-m64 -Wl,-s -Wl,-Bsymbolic -Wl,--gc-sections' \
     --with-cc-opt="-I/opt/libressl/include" \
     --with-ld-opt="-L/opt/libressl/lib" \
