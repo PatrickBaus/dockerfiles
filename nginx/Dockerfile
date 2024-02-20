@@ -17,7 +17,7 @@ RUN apk --no-cache upgrade \
     git \
     gnupg
 
-COPY libressl_signing_key.txt nginx_signing_key.txt /
+COPY signing_keys/*.txt /
 
 # Install libreSSL
 RUN \
@@ -67,7 +67,7 @@ RUN \
   && wget -q "https://nginx.org/download/${NGINX_TARBALL}" \
   && wget "https://nginx.org/download/${NGINX_TARBALL}.asc" \
   && export GNUPGHOME=${TEMP_DIR} \
-  && gpg --import /nginx_signing_key.txt \
+  && gpg --import /nginx_signing_key_*.txt \
   && gpg --verify "${NGINX_TARBALL}.asc" \
   && unset GNUPGHOME \
   && tar -xzf "${NGINX_TARBALL}" \
