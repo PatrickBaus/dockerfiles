@@ -1,5 +1,5 @@
 FROM alpine:3.19 as nextcloud-builder
-ARG NEXTCLOUD_VERSION=28.0.3
+ARG NEXTCLOUD_VERSION=28.0.4
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
