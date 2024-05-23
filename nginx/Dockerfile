@@ -2,7 +2,7 @@ ARG NGINX_VERSION=1.25.5
 ARG LIBRESSL_VERSION=3.9.1
 ARG BUILD_CORES
 
-FROM alpine:3.19.1 as builder
+FROM alpine:3.20.0 as builder
 
 ARG NGINX_VERSION
 ARG LIBRESSL_VERSION
@@ -106,7 +106,7 @@ RUN \
   && make -j${NPROC} \
   && make install
 
-FROM alpine:3.19.1
+FROM alpine:3.20.0
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 ARG NGINX_VERSION
