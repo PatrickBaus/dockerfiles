@@ -1,5 +1,5 @@
-FROM alpine:3.20 as nextcloud-builder
-ARG NEXTCLOUD_VERSION=29.0.1
+FROM alpine:3.20.2 AS nextcloud-builder
+ARG NEXTCLOUD_VERSION=29.0.5
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -26,7 +26,7 @@ RUN \
   mkdir /app && \
   tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app
 
-FROM alpine:3.20
+FROM alpine:3.20.2
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 # Default GID=101, UID=100
@@ -40,6 +40,7 @@ RUN apk --no-cache upgrade
 # PHP       #
 #############
 RUN apk --no-cache add gnu-libiconv \
+  imagemagick-svg \
   php83 \
   php83-bcmath \
   php83-ctype \
@@ -59,6 +60,7 @@ RUN apk --no-cache add gnu-libiconv \
   php83-session \
   php83-simplexml \
   php83-sysvsem \
+  php83-sodium \
   php83-xml \
   php83-xmlreader \
   php83-xmlwriter \
