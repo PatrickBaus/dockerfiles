@@ -1,4 +1,4 @@
-FROM alpine:3.20.2 AS nextcloud-builder
+FROM alpine:3.20.3 AS nextcloud-builder
 ARG NEXTCLOUD_VERSION=29.0.6
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
@@ -26,7 +26,7 @@ RUN \
   mkdir /app && \
   tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app
 
-FROM alpine:3.20.2
+FROM alpine:3.20.3
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 # Default GID=101, UID=100
