@@ -18,9 +18,9 @@ RUN \
   echo -ne "Downloading source...\e[0m" && \
   wget -q https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.metadata && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} && \
-  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 && \
+  wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha512 && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc && \
-  if [ $(echo -n $(sha256sum -c "${NEXTCLOUD_TARBALL}.sha256") | tail -c 2) != "OK" ]; then echo -e "Error! Tarball checksum does not match!" && exit 1; fi && \
+  if [ $(echo -n $(sha512sum -c "${NEXTCLOUD_TARBALL}.sha512") | tail -c 2) != "OK" ]; then echo -e "Error! Tarball checksum does not match!" && exit 1; fi && \
   gpg --import /nextcloud_signing_key.asc && \
   gpg --batch --verify "${NEXTCLOUD_TARBALL}.asc" "${NEXTCLOUD_TARBALL}" && \
   echo -ne "Unpacking source...\e[0m" && \
