@@ -137,4 +137,4 @@ LABEL \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD supervisord -c /etc/supervisor.d/default.ini
+CMD ["supervisord", "-c", "/etc/supervisor.d/default.ini"]
