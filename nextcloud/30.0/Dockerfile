@@ -1,5 +1,5 @@
-FROM alpine:3.19 as nextcloud-builder
-ARG NEXTCLOUD_VERSION=28.0.5
+FROM alpine:3.20.3 AS nextcloud-builder
+ARG NEXTCLOUD_VERSION=30.0.0
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -16,6 +16,7 @@ RUN \
   cd ${temp_dir} && \
   NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" && \
   echo -ne "Downloading source...\e[0m" && \
+  wget -q https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.metadata && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 && \
   wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc && \
@@ -26,7 +27,7 @@ RUN \
   mkdir /app && \
   tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app
 
-FROM alpine:3.19
+FROM alpine:3.20.3
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 # Default GID=101, UID=100
@@ -40,6 +41,7 @@ RUN apk --no-cache upgrade
 # PHP       #
 #############
 RUN apk --no-cache add gnu-libiconv \
+  imagemagick-svg \
   php83 \
   php83-bcmath \
   php83-ctype \
@@ -59,6 +61,7 @@ RUN apk --no-cache add gnu-libiconv \
   php83-session \
   php83-simplexml \
   php83-sysvsem \
+  php83-sodium \
   php83-xml \
   php83-xmlreader \
   php83-xmlwriter \
@@ -135,4 +138,4 @@ LABEL \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD supervisord -c /etc/supervisor.d/default.ini
+CMD ["supervisord", "-c", "/etc/supervisor.d/default.ini"]
