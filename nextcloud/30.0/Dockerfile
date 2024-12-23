@@ -1,5 +1,7 @@
-FROM alpine:3.20.3 AS nextcloud-builder
-ARG NEXTCLOUD_VERSION=30.0.0
+FROM alpine:3.21.0 AS base
+
+FROM base AS builder
+ARG NEXTCLOUD_VERSION=30.0.4
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -27,11 +29,11 @@ RUN \
   mkdir /app && \
   tar xjf "${NEXTCLOUD_TARBALL}" --strip 1 -C /app
 
-FROM alpine:3.20.3
+FROM base
 LABEL maintainer="Patrick Baus <patrick.baus@physik.tu-darmstadt.de>"
 
 # Default GID=101, UID=100
-ENV GID=101 UID=100
+ENV GID=102 UID=102
 
 # Upgrade installed packages
 RUN apk --no-cache upgrade
@@ -101,7 +103,7 @@ RUN rm /etc/nginx/http.d/default.conf
 #############
 # Nextcloud #
 #############
-COPY --from=nextcloud-builder /app /var/www/nextcloud/
+COPY --from=builder /app /var/www/nextcloud/
 COPY upgrade_nextcloud.sh /
 RUN chmod +x /upgrade_nextcloud.sh
 
