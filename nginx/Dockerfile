@@ -1,4 +1,4 @@
-FROM alpine:3.22.1 AS base
+FROM alpine:3.23.0 AS base
 
 ARG NGINX_VERSION=1.29.0
 ARG LIBRESSL_VERSION=4.1.0
