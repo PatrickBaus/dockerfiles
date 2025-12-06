@@ -1,7 +1,7 @@
-FROM alpine:3.22.0 AS base
+FROM alpine:3.23.0 AS base
 
 FROM base AS builder
-ARG NEXTCLOUD_VERSION=31.0.7
+ARG NEXTCLOUD_VERSION=31.0.11
 # This key needs to be hardcoded to make sure the files were not tampered with
 # See https://nextcloud.com/security/ for the current key
 ARG GPG_NEXTCLOUD="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
