@@ -1,5 +1,6 @@
 <?php
 $CONFIG = array (
+  'trusted_proxies'   => ['172.22.0.2'],
   'maintenance_window_start' => 2,
   'memcache.local' => '\OC\Memcache\APCu',
   'apps_paths' => array (
