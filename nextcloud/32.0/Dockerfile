@@ -44,46 +44,46 @@ RUN apk --no-cache upgrade
 #############
 RUN apk --no-cache add gnu-libiconv \
   imagemagick-svg \
-  php83 \
-  php83-bcmath \
-  php83-ctype \
-  php83-curl \
-  php83-dom \
-  php83-fileinfo \
-  php83-gd \
-  php83-gmp \
-  php83-iconv \
-  php83-intl \
-  php83-json \
-  php83-mbstring \
-  php83-opcache \
-  php83-openssl \
-  php83-pcntl \
-  php83-posix \
-  php83-session \
-  php83-simplexml \
-  php83-sysvsem \
-  php83-sodium \
-  php83-xml \
-  php83-xmlreader \
-  php83-xmlwriter \
-  php83-zip \
-  php83-zlib \
-  php83-pdo_mysql \
-  php83-bz2 \
+  php84 \
+  php84-bcmath \
+  php84-ctype \
+  php84-curl \
+  php84-dom \
+  php84-fileinfo \
+  php84-gd \
+  php84-gmp \
+  php84-iconv \
+  php84-intl \
+  php84-json \
+  php84-mbstring \
+  php84-opcache \
+  php84-openssl \
+  php84-pcntl \
+  php84-posix \
+  php84-session \
+  php84-simplexml \
+  php84-sysvsem \
+  php84-sodium \
+  php84-xml \
+  php84-xmlreader \
+  php84-xmlwriter \
+  php84-zip \
+  php84-zlib \
+  php84-pdo_mysql \
+  php84-bz2 \
   openssl \
   ca-certificates \
-  php83-ldap \
-  php83-exif \
-  php83-apcu \
-  php83-fpm \
-  php83-pecl-imagick
+  php84-ldap \
+  php84-exif \
+  php84-apcu \
+  php84-fpm \
+  php84-pecl-imagick
 
 # Copy the default php and php-fpm config to the image
 # Do not touch these files unless you know what you doing
-COPY php-fpm_conf/php-fpm.conf /etc/php83/
-COPY php-fpm_conf/www.conf /etc/php83/php-fpm.d/
-COPY php_conf/ /etc/php83/conf.d/
+COPY php-fpm_conf/php-fpm.conf /etc/php84/
+COPY php-fpm_conf/www.conf /etc/php84/php-fpm.d/
+COPY php_conf/ /etc/php84/conf.d/
 
 #############
 # Nginx     #
